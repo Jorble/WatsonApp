@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.zhy.autolayout.AutoLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="10px"
+    android:layout_marginBottom="10px"
+    android:layout_marginLeft="40px"
+    android:layout_marginRight="40px"
+    android:orientation="horizontal"
+    >
+
+    <com.zhy.autolayout.AutoLinearLayout
+        android:layout_weight="1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="20px"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/name_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:text="名称"
+            android:textColor="@color/text_black1"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/value_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:text="value"
+            android:textColor="@color/text_black2"
+            android:textSize="14sp" />
+
+    </com.zhy.autolayout.AutoLinearLayout>
+
+    <Button
+        android:id="@+id/remove_bt"
+        android:layout_width="250px"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_margin="10px"
+        android:text="删除"
+        android:textSize="14sp"
+        android:background="@drawable/shape_bg_corner"/>
+
+</com.zhy.autolayout.AutoLinearLayout>

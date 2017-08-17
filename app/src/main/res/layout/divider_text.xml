@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.zhy.autolayout.AutoLinearLayout android:id="@+id/divider_ll"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginRight="120px"
+    android:layout_marginLeft="120px"
+    android:layout_marginTop="40px"
+    android:layout_marginBottom="40px"
+    android:gravity="center_vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <com.zhy.autolayout.AutoLinearLayout
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="1px"
+        android:background="@color/divider"/>
+    <TextView
+        android:id="@+id/divider_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="40px"
+        android:layout_marginRight="40px"
+        android:text="分隔栏"/>
+    <com.zhy.autolayout.AutoLinearLayout
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="1px"
+        android:background="@color/divider"/>
+</com.zhy.autolayout.AutoLinearLayout>

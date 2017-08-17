@@ -1,0 +1,46 @@
+<resources>
+
+    <style name="AppTheme.NoActionBar" parent="Theme.AppCompat.DayNight">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="AppTheme.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="android:windowAnimationStyle">@style/AnimaActivity</item>
+    </style>
+
+    <style name="AnimaActivity">
+        <item name="android:activityOpenEnterAnimation">@anim/translate_right_to_center</item>
+        <item name="android:activityOpenExitAnimation">@anim/translate_center_to_left</item>
+        <item name="android:activityCloseEnterAnimation">@anim/translate_left_to_center</item>
+        <item name="android:activityCloseExitAnimation">@anim/translate_center_to_right</item>
+    </style>
+
+    <!--  底部滑出popupwindow -->
+    <style name="popwindow_bottom_anim_style">
+        <item name="android:windowEnterAnimation">@anim/pop_bottom_show</item>
+        <!-- 指定显示的动画xml -->
+
+        <item name="android:windowExitAnimation">@anim/pop_bottom_hidden</item>
+        <!-- 指定消失的动画xml -->
+    </style>
+
+    <!--  透明渐变popupwindow -->
+    <style name="popwindow_alpha_anim_style">
+        <item name="android:windowEnterAnimation">@anim/pop_alpha_show</item>
+        <item name="android:windowExitAnimation">@anim/pop_alpha_hidden</item>
+    </style>
+
+    <!--  webview -->
+    <style name="toolBar">
+        <item name="colorControlNormal">#ffffff</item>
+        <item name="android:homeAsUpIndicator">@mipmap/close</item>
+        <item name="android:titleTextStyle">@style/titlestyle</item>
+    </style>
+    <style name="titlestyle">
+        <item name="android:textSize">12sp</item>
+    </style>
+
+</resources>

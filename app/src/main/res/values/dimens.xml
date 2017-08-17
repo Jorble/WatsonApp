@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="home_title">24sp</dimen>
+
+    <dimen name="text_size1">16sp</dimen>
+    <dimen name="text_size2">14sp</dimen>
+    <dimen name="text_size3">12sp</dimen>
+
+    <dimen name="chat_title_bar_txt_size">20sp</dimen>
+</resources>

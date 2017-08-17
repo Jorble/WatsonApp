@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- 波纹按钮 -->
     <declare-styleable name="CircularRippleButton">
         <attr name="crb_ripple_width" format="dimension" />
         <attr name="crb_ripple_color" format="color" />
@@ -7,4 +8,14 @@
         <attr name="crb_text" format="integer" />
         <attr name="crb_text_color" format="color" />
     </declare-styleable>
+
+    <!-- 多行文本折叠 -->
+    <declare-styleable name="MoreTextStyle">
+        <attr name="mytextSize" format="dimension" />
+        <attr name="mytextColor" format="color" />
+        <attr name="maxLine" format="integer" />
+        <attr name="text" format="string|reference" />
+        <attr name="expand" format="boolean" />
+    </declare-styleable>
+
 </resources>

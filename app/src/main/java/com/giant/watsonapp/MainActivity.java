@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -12,8 +13,10 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.giant.watsonapp.chat.ChatActivity;
 import com.giant.watsonapp.setting.SettingActivity;
+import com.giant.watsonapp.utils.DoubleClickExitHelper;
 import com.giant.watsonapp.utils.GlideRoundTransform;
 import com.giant.watsonapp.utils.UiUtils;
+import com.giant.watsonapp.voice.VoiceActivity;
 import com.jaeger.library.StatusBarUtil;
 import com.youth.banner.Banner;
 import com.youth.banner.BannerConfig;
@@ -51,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
     Banner banner;
 
     private int countTitleClick=0;//点击标题3下进入设置页面
+    DoubleClickExitHelper mDoubleClickExitHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +62,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         StatusBarUtil.setTransparent(this);
+        mDoubleClickExitHelper = new DoubleClickExitHelper(this);// 双击返回键退出
+
 
         initBanner();
     }
@@ -89,6 +95,7 @@ public class MainActivity extends AppCompatActivity {
             case R.id.menu_food:
                 break;
             case R.id.menu_specialty:
+                UiUtils.startActivity(this, VoiceActivity.class);
                 break;
             case R.id.menu_robot:
                 UiUtils.startActivity(this, ChatActivity.class);
@@ -155,5 +162,20 @@ public class MainActivity extends AppCompatActivity {
                     .into(imageView);
 
         }
+    }
+
+    /**
+     * 监听返回--是否退出程序
+     */
+    public boolean onKeyDown(int keyCode, KeyEvent event)
+    {
+        boolean flag = true;
+        if (keyCode == KeyEvent.KEYCODE_BACK)
+        {
+            // 是否退出应用
+            return mDoubleClickExitHelper.onKeyDown(keyCode, event);
+        }
+
+        return flag;
     }
 }

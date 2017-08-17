@@ -307,7 +307,7 @@
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:layout_marginTop="5dp"
-                                        android:text="特产"
+                                        android:text="语音导游"
                                         android:textSize="@dimen/text_size1"
                                         android:textColor="#355880"
                                         android:alpha="0.8"/>
@@ -315,7 +315,7 @@
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:layout_marginTop="5dp"
-                                        android:text="Specialty"
+                                        android:text="Voice Guide"
                                         android:textSize="@dimen/text_size3"
                                         android:textColor="#355880"
                                         android:alpha="0.8"/>

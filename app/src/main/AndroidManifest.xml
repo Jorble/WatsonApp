@@ -73,6 +73,7 @@
         <activity
             android:name=".setting.ClassifierEditActivity"
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
+        <activity android:name=".voice.VoiceActivity"></activity>
     </application>
 
 </manifest>

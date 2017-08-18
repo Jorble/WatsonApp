@@ -33,7 +33,7 @@
                     android:layout_marginBottom="2dp"
                     android:textColor="#073663"
                     android:textSize="@dimen/home_title"
-                    android:text="玳瑁岛"/>
+                    android:text="三亚"/>
                 <TextView
                     android:id="@+id/spot_desc"
                     android:layout_width="wrap_content"
@@ -45,7 +45,7 @@
                     android:layout_marginLeft="3dp"
                     android:textColor="#073869"
                     android:textSize="@dimen/text_size1"
-                    android:text="文化小镇"
+                    android:text="玳瑁岛"
                     android:alpha="0.9"/>
                 <TextView
                     android:id="@+id/spot_other"
@@ -58,7 +58,7 @@
                     android:layout_marginLeft="3dp"
                     android:textColor="#073663"
                     android:textSize="@dimen/text_size3"
-                    android:text="Cultural town"
+                    android:text="Hawksbill Island"
                     android:alpha="0.4"/>
             </RelativeLayout>
 

@@ -12,19 +12,21 @@ public class TimeLineModel implements Parcelable {
     private String title;
     private String message;
     private String img;
+    private String url;
     private OrderStatus status;
     private boolean isPlaying;
 
     public TimeLineModel() {
     }
 
-    public TimeLineModel(String id,String message, String title,String img,boolean isPlaying, OrderStatus status) {
+    public TimeLineModel(String id,String message, String title,String img,String url,boolean isPlaying, OrderStatus status) {
         this.message = message;
         this.title = title;
         this.status = status;
         this.img = img;
         this.id = id;
         this.isPlaying=isPlaying;
+        this.url = url;
     }
 
     public String getId() {
@@ -33,6 +35,14 @@ public class TimeLineModel implements Parcelable {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     public boolean isPlaying() {
@@ -86,6 +96,7 @@ public class TimeLineModel implements Parcelable {
         dest.writeString(this.message);
         dest.writeString(this.title);
         dest.writeString(this.img);
+        dest.writeString(this.url);
         dest.writeByte((byte) (isPlaying ? 1 : 0));
         dest.writeInt(this.status == null ? -1 : this.status.ordinal());
     }
@@ -95,6 +106,7 @@ public class TimeLineModel implements Parcelable {
         this.message = in.readString();
         this.title = in.readString();
         this.img = in.readString();
+        this.url = in.readString();
         this.isPlaying = in.readByte() != 0;     //myBoolean == true if byte != 0
         int tmpMStatus = in.readInt();
         this.status = tmpMStatus == -1 ? null : OrderStatus.values()[tmpMStatus];

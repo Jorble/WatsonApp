@@ -85,6 +85,11 @@ public class VoiceActivity extends AppCompatActivity {
 
     private SharedPreferences mSharedPreferences;
 
+    //当前操作的model
+    TimeLineModel currentModel;
+    //当前操作的model的位置
+    int positon;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -115,7 +120,7 @@ public class VoiceActivity extends AppCompatActivity {
         public void onInit(int code) {
             L.i("InitListener init() code = " + code);
             if (code != ErrorCode.SUCCESS) {
-                L.e("初始化tts失败,错误码："+code);
+                L.e("初始化tts失败,错误码：" + code);
             } else {
                 // 初始化成功，之后可以调用startSpeaking方法
                 // 注：有的开发者在onCreate方法中创建完合成对象之后马上就调用startSpeaking进行合成，
@@ -168,6 +173,12 @@ public class VoiceActivity extends AppCompatActivity {
         public void onCompleted(SpeechError error) {
             if (error == null) {
                 L.i("播放完成");
+                //播放完成设置完成标志
+                if (currentModel != null) {
+                    currentModel.setStatus(OrderStatus.COMPLETED);
+                    currentModel.setPlaying(false);
+                    mTimeLineAdapter.setItem(positon, currentModel);
+                }
             } else if (error != null) {
                 L.i(error.getPlainDescription(true));
             }
@@ -186,6 +197,7 @@ public class VoiceActivity extends AppCompatActivity {
 
     /**
      * 根据recyclerview的排列方式决定布局排列方式
+     *
      * @return
      */
     private LinearLayoutManager getLinearLayoutManager() {
@@ -201,28 +213,105 @@ public class VoiceActivity extends AppCompatActivity {
      */
     private void initRecyclerView() {
         setDataListItems();
-        mTimeLineAdapter = new TimeLineAdapter(mDataList,mOrientation,mWithLinePadding);
+        mTimeLineAdapter = new TimeLineAdapter(mDataList, mOrientation, mWithLinePadding);
         recyclerView.setAdapter(mTimeLineAdapter);
     }
 
     /**
      * 设置数据
      */
-    private void setDataListItems(){
-        for(int i=0;i<10;i++){
-            TimeLineModel model=new TimeLineModel();
-            model.setImg("http://ubmcmm.baidustatic.com/media/v1/0f0005yWcIBA48LujiH7h0.jpg");
-            model.setMessage("三亚（Sanya ）位于海南岛的最南端，具有热带海滨风景特色的国际旅游城市" +
-                    "中国海滨城市，是中国空气质量最好的城市之一、全国最长寿地区（平均寿命80岁）。" +
-                    "三亚市别称鹿城，又被称为“东方夏威夷”，位居中国四大一线旅游城市“三威杭厦”之首，" +
-                    "拥有全岛最美丽的海滨风光。");
-            model.setPlaying(false);
-            model.setStatus(OrderStatus.INACTIVE);
-            model.setTitle("三亚风景区");
-            mDataList.add(model);
-        }
+    private void setDataListItems() {
+        TimeLineModel model = new TimeLineModel();
+        model.setTitle("亚龙湾热带天堂森林公园");
+        model.setUrl("https://baike.baidu.com/item/"+model.getTitle());
+        model.setImg("https://dimg06.c-ctrip.com/images/fd/tg/g1/M02/7D/34/CghzfFWwz_uAa1DFABwYw-O18Fg870_D_180_180.jpg");
+        model.setMessage("亚龙湾热带天堂森林公园是海南省第一座滨海山地生态观光兼生态度假型森林公园，整个环境呈现热带风格，树木繁多茂密，是很原始的热带自然风格。爬到最高峰，可以从上而下俯瞰亚龙湾。");
+        model.setPlaying(false);
+        model.setStatus(OrderStatus.INACTIVE);
+        mDataList.add(model);
+
+        TimeLineModel model2 = new TimeLineModel();
+        model2.setTitle("亚龙湾");
+        model.setUrl("https://baike.baidu.com/item/"+model.getTitle());
+        model2.setImg("https://dimg01.c-ctrip.com/images/fd/tg/g1/M03/7D/32/CghzfFWwz9eAFdICABJIucYkXDg976_D_180_180.jpg");
+        model2.setMessage("亚龙湾沙质细腻，海水干净，椰树海风蓝天白云，景色非常优美，不论是看海景还是体验水上运动，都非常不错。");
+        model2.setPlaying(false);
+        model2.setStatus(OrderStatus.INACTIVE);
+        mDataList.add(model2);
+
+        TimeLineModel model3 = new TimeLineModel();
+        model3.setTitle("南山文化旅游区");
+        model.setUrl("https://baike.baidu.com/item/"+model.getTitle());
+        model3.setImg("https://dimg02.c-ctrip.com/images/100g050000000fs9o223C_D_180_180.jpg");
+        model3.setMessage("南山文化旅游区是著名的佛教圣地，这里108米高的海上观音圣像是标志性景观，南山寺的素食也是非常有名。");
+        model3.setPlaying(false);
+        model3.setStatus(OrderStatus.INACTIVE);
+        mDataList.add(model3);
+
+        TimeLineModel model4 = new TimeLineModel();
+        model4.setTitle("天涯海角");
+        model.setUrl("https://baike.baidu.com/item/"+model.getTitle());
+        model4.setImg("https://dimg03.c-ctrip.com/images/fd/tg/g1/M02/7A/7D/CghzfFWwra2AUWzeACOF4nciR4E872_D_180_180.jpg");
+        model4.setMessage("从古至今，都流传着许多关于天涯海角的浪漫故事，与“天涯”、“海角”、“南天一柱”等地标石刻合影留念，是许多游客来这里必做的事情。");
+        model4.setPlaying(false);
+        model4.setStatus(OrderStatus.INACTIVE);
+        mDataList.add(model4);
+
+        TimeLineModel model5 = new TimeLineModel();
+        model5.setTitle("椰梦长廊");
+        model.setUrl("https://baike.baidu.com/item/"+model.getTitle());
+        model5.setImg("https://dimg05.c-ctrip.com/images/fd/tg/g2/M03/8E/90/CghzgVWxFkKAdOeMACHAZkL2Ob0476_D_180_180.jpg");
+        model5.setMessage("椰梦长廊位于三亚湾的海岸线上，葱郁的椰林、洁白的沙滩、一望无际的大海，构成了这里的美景。慢悠悠地走着，或者租辆单车骑行，都无比惬意。");
+        model5.setPlaying(false);
+        model5.setStatus(OrderStatus.INACTIVE);
+        mDataList.add(model5);
+
+        TimeLineModel model6 = new TimeLineModel();
+        model6.setTitle("蜈支洲岛");
+        model.setUrl("https://baike.baidu.com/item/"+model.getTitle());
+        model6.setImg("https://dimg05.c-ctrip.com/images/fd/tg/g1/M0B/7F/99/CghzfFWw9WKAbGoyABJRTZ3Fifw127_D_180_180.jpg");
+        model6.setMessage("蜈支洲岛的海水清澈，能见度非常高，其中的观日岩是绝佳的观景点。岛上的娱乐设施也很齐全，项目种类丰富。");
+        model6.setPlaying(false);
+        model6.setStatus(OrderStatus.INACTIVE);
+        mDataList.add(model6);
+
+        TimeLineModel model7 = new TimeLineModel();
+        model7.setTitle("第一市场");
+        model.setUrl("https://baike.baidu.com/item/"+model.getTitle());
+        model7.setImg("https://dimg08.c-ctrip.com/images/fd/tg/g1/M07/7A/DC/CghzfVWwuHeACFZQABD-1Z8NBvI018_D_180_180.jpg");
+        model7.setMessage("第一市场是许多游客吃海鲜的首选之地，这里的海鲜新鲜又便宜，在集贸市场里买了海鲜之后就近找加工店加工，比去大饭店吃要便宜很多。");
+        model7.setPlaying(false);
+        model7.setStatus(OrderStatus.INACTIVE);
+        mDataList.add(model7);
+
+        TimeLineModel model8 = new TimeLineModel();
+        model8.setTitle("珠江南田温泉");
+        model.setUrl("https://baike.baidu.com/item/"+model.getTitle());
+        model8.setImg("https://dimg03.c-ctrip.com/images/tg/643/495/089/70fcb8ca31ad4e50b02f658da12aed07_D_180_180.jpg");
+        model8.setMessage("珠江南田温泉是三亚知名度非常高的温泉区，汤池的种类丰富，环境也很有特色，给人一种在热带雨林中泡温泉的感觉。");
+        model8.setPlaying(false);
+        model8.setStatus(OrderStatus.INACTIVE);
+        mDataList.add(model8);
+
+        TimeLineModel model9 = new TimeLineModel();
+        model9.setTitle("大东海");
+        model.setUrl("https://baike.baidu.com/item/"+model.getTitle());
+        model9.setImg("https://dimg03.c-ctrip.com/images/fd/tg/g3/M08/0B/4B/CggYGVXAOoOAU3K1ACd6fZ_ann4456_D_180_180.jpg");
+        model9.setMessage("大东海是一片三面环山的月牙形海湾，这里水清沙软，也比较适合游泳和潜水。大东海一带有许多价格实惠的海景公寓，很适合来此小住些日子。");
+        model9.setPlaying(false);
+        model9.setStatus(OrderStatus.INACTIVE);
+        mDataList.add(model9);
+
+        TimeLineModel model10 = new TimeLineModel();
+        model10.setTitle("三亚千古情景区");
+        model.setUrl("https://baike.baidu.com/item/"+model.getTitle());
+        model10.setImg("https://dimg09.c-ctrip.com/images/100a0700000020xmg4C78_D_180_180.jpg");
+        model10.setMessage("三亚千古情景区内有许多有意思的小表演，但最值得一看的是大型歌舞秀《三亚千古情》，每一个场景都编排得十分震撼。");
+        model10.setPlaying(false);
+        model10.setStatus(OrderStatus.INACTIVE);
+        mDataList.add(model10);
     }
-    
+
     @OnClick({R.id.back_iv, R.id.title_tv})
     public void onViewClicked(View view) {
         switch (view.getId()) {
@@ -237,10 +326,10 @@ public class VoiceActivity extends AppCompatActivity {
     /**
      * 播放语音
      */
-    private void playAudio(String source){
-        if( null == mTts ){
+    private void playAudio(String source) {
+        if (null == mTts) {
             // 创建单例失败，与 21001 错误为同样原因，参考 http://bbs.xfyun.cn/forum.php?mod=viewthread&tid=9688
-            L.e( "创建单例失败，与 21001 错误为同样原因，请确认 libmsc.so 放置正确，且有调用 createUtility 进行初始化" );
+            L.e("创建单例失败，与 21001 错误为同样原因，请确认 libmsc.so 放置正确，且有调用 createUtility 进行初始化");
             return;
         }
         // 开始合成
@@ -256,11 +345,11 @@ public class VoiceActivity extends AppCompatActivity {
 //			int code = mTts.synthesizeToUri(text, path, mTtsListener);
 
         if (code != ErrorCode.SUCCESS) {
-            if(code == ErrorCode.ERROR_COMPONENT_NOT_INSTALLED){
+            if (code == ErrorCode.ERROR_COMPONENT_NOT_INSTALLED) {
                 //未安装则跳转到提示安装页面
 //                mInstaller.install();
-                L.i("本地合成需要安装语记");
-            }else {
+                L.i("本地合成需要安装语记app");
+            } else {
                 L.e("语音合成失败,错误码: " + code);
             }
         }
@@ -268,13 +357,14 @@ public class VoiceActivity extends AppCompatActivity {
 
     /**
      * 参数设置
+     *
      * @return
      */
-    private void setParam(){
+    private void setParam() {
         // 清空参数
         mTts.setParameter(SpeechConstant.PARAMS, null);
         // 根据合成引擎设置相应参数
-        if(mEngineType.equals(SpeechConstant.TYPE_CLOUD)) {
+        if (mEngineType.equals(SpeechConstant.TYPE_CLOUD)) {
             mTts.setParameter(SpeechConstant.ENGINE_TYPE, SpeechConstant.TYPE_CLOUD);
             // 设置在线合成发音人
             mTts.setParameter(SpeechConstant.VOICE_NAME, mSharedPreferences.getString("voice_preference", voicer));
@@ -284,7 +374,7 @@ public class VoiceActivity extends AppCompatActivity {
             mTts.setParameter(SpeechConstant.PITCH, mSharedPreferences.getString("pitch_preference", "50"));
             //设置合成音量
             mTts.setParameter(SpeechConstant.VOLUME, mSharedPreferences.getString("volume_preference", "50"));
-        }else {
+        } else {
             mTts.setParameter(SpeechConstant.ENGINE_TYPE, SpeechConstant.TYPE_LOCAL);
             // 设置本地合成发音人 voicer为空，默认通过语记界面指定发音人。
             mTts.setParameter(SpeechConstant.VOICE_NAME, "");
@@ -301,21 +391,23 @@ public class VoiceActivity extends AppCompatActivity {
         // 设置音频保存路径，保存音频格式支持pcm、wav，设置路径为sd卡请注意WRITE_EXTERNAL_STORAGE权限
         // 注：AUDIO_FORMAT参数语记需要更新版本才能生效
         mTts.setParameter(SpeechConstant.AUDIO_FORMAT, "wav");
-        mTts.setParameter(SpeechConstant.TTS_AUDIO_PATH, Environment.getExternalStorageDirectory()+"/msc/tts.wav");
+        mTts.setParameter(SpeechConstant.TTS_AUDIO_PATH, Environment.getExternalStorageDirectory() + "/msc/tts.wav");
     }
 
     /**
      * 接收播放或停止音频信息
+     *
      * @param message
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(Message message) {
-        if (message.obj == null)return;
-        TimeLineModel model = (TimeLineModel)message.obj;
+        if (message.obj == null) return;
+        currentModel = (TimeLineModel) message.obj;
+        positon = message.arg1;
 
         switch (message.what) {
             case BUS_VOICE_PLAY:
-                playAudio(model.getMessage());
+                playAudio(currentModel.getMessage());
                 break;
             case BUS_VOICE_STOP:
                 mTts.stopSpeaking();
@@ -327,7 +419,7 @@ public class VoiceActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
 
-        if( null != mTts ){
+        if (null != mTts) {
             mTts.stopSpeaking();
             // 退出时释放连接
             mTts.destroy();
@@ -350,6 +442,7 @@ public class VoiceActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
     }
+
     @Override
     protected void onPause() {
         super.onPause();

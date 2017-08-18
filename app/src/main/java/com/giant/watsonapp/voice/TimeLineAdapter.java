@@ -1,6 +1,7 @@
 package com.giant.watsonapp.voice;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Message;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
@@ -12,14 +13,18 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.giant.watsonapp.Const;
 import com.giant.watsonapp.R;
+import com.giant.watsonapp.chat.ChatActivity;
 import com.giant.watsonapp.models.OrderStatus;
 import com.giant.watsonapp.models.Orientation;
 import com.giant.watsonapp.models.TimeLineModel;
 import com.giant.watsonapp.utils.DateTimeUtils;
 import com.giant.watsonapp.utils.L;
 import com.giant.watsonapp.utils.T;
+import com.giant.watsonapp.utils.UiUtils;
 import com.giant.watsonapp.utils.VectorDrawableUtils;
+import com.giant.watsonapp.web.WebActivity;
 import com.github.vipulasri.timelineview.TimelineView;
+import com.iflytek.cloud.thirdparty.M;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -27,6 +32,8 @@ import java.util.List;
 
 import jp.wasabeef.glide.transformations.BlurTransformation;
 import jp.wasabeef.glide.transformations.CropCircleTransformation;
+
+import static android.R.id.message;
 
 /**
  * Created by HP-HP on 05-12-2015.
@@ -82,7 +89,7 @@ public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineViewHolder> {
         holder.message.setText(timeLineModel.getMessage());
 
         if(timeLineModel.isPlaying()){
-            holder.play.setImageResource(R.mipmap.icon_voice_pause);
+            holder.play.setImageResource(R.mipmap.icon_voice_stop);
             holder.message.setExpand(true);//展开文字
         }else {
             holder.play.setImageResource(R.mipmap.icon_voice_play);
@@ -98,6 +105,12 @@ public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineViewHolder> {
                 .into(holder.img);
 
         //点击事件
+        holder.img.setOnClickListener((View view)->{
+            Intent intent = new Intent(mContext, WebActivity.class);
+            intent.putExtra("url", timeLineModel.getUrl());
+            mContext.startActivity(intent);
+        });
+
         holder.play.setOnClickListener((View view)->{
             //停止播放中的item
             for(int i=0;i<mFeedList.size();i++){
@@ -109,18 +122,21 @@ public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineViewHolder> {
 
             //播放当前item
             if(timeLineModel.isPlaying()){
-                L.i("点击了暂停");
+                L.i("点击了停止");
                 timeLineModel.setPlaying(false);
                 Message message=new Message();
                 message.what = Const.BUS_VOICE_STOP;
                 message.obj = timeLineModel;
+                message.arg1 = position;
                 EventBus.getDefault().post(message);
             }else {
                 L.i("点击了播放");
+                timeLineModel.setStatus(OrderStatus.ACTIVE);
                 timeLineModel.setPlaying(true);
                 Message message=new Message();
                 message.what = Const.BUS_VOICE_PLAY;
                 message.obj = timeLineModel;
+                message.arg1 = position;
                 EventBus.getDefault().post(message);
             }
 
@@ -134,4 +150,24 @@ public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineViewHolder> {
         return (mFeedList!=null? mFeedList.size():0);
     }
 
+    /**
+     * 替换指定索引的数据条目
+     *
+     * @param position
+     * @param newModel
+     */
+    public void setItem(int position, TimeLineModel newModel) {
+        mFeedList.set(position, newModel);
+        notifyItemChanged(position);
+    }
+
+    /**
+     * 替换指定数据条目
+     *
+     * @param oldModel
+     * @param newModel
+     */
+    public void setItem(TimeLineModel oldModel, TimeLineModel newModel) {
+        setItem(mFeedList.indexOf(oldModel), newModel);
+    }
 }

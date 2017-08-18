@@ -232,7 +232,7 @@ public class VoiceActivity extends AppCompatActivity {
 
         TimeLineModel model2 = new TimeLineModel();
         model2.setTitle("亚龙湾");
-        model.setUrl("https://baike.baidu.com/item/"+model.getTitle());
+        model2.setUrl("https://baike.baidu.com/item/"+model2.getTitle());
         model2.setImg("https://dimg01.c-ctrip.com/images/fd/tg/g1/M03/7D/32/CghzfFWwz9eAFdICABJIucYkXDg976_D_180_180.jpg");
         model2.setMessage("亚龙湾沙质细腻，海水干净，椰树海风蓝天白云，景色非常优美，不论是看海景还是体验水上运动，都非常不错。");
         model2.setPlaying(false);
@@ -241,7 +241,7 @@ public class VoiceActivity extends AppCompatActivity {
 
         TimeLineModel model3 = new TimeLineModel();
         model3.setTitle("南山文化旅游区");
-        model.setUrl("https://baike.baidu.com/item/"+model.getTitle());
+        model3.setUrl("https://baike.baidu.com/item/"+model3.getTitle());
         model3.setImg("https://dimg02.c-ctrip.com/images/100g050000000fs9o223C_D_180_180.jpg");
         model3.setMessage("南山文化旅游区是著名的佛教圣地，这里108米高的海上观音圣像是标志性景观，南山寺的素食也是非常有名。");
         model3.setPlaying(false);
@@ -250,7 +250,7 @@ public class VoiceActivity extends AppCompatActivity {
 
         TimeLineModel model4 = new TimeLineModel();
         model4.setTitle("天涯海角");
-        model.setUrl("https://baike.baidu.com/item/"+model.getTitle());
+        model4.setUrl("https://baike.baidu.com/item/"+model4.getTitle());
         model4.setImg("https://dimg03.c-ctrip.com/images/fd/tg/g1/M02/7A/7D/CghzfFWwra2AUWzeACOF4nciR4E872_D_180_180.jpg");
         model4.setMessage("从古至今，都流传着许多关于天涯海角的浪漫故事，与“天涯”、“海角”、“南天一柱”等地标石刻合影留念，是许多游客来这里必做的事情。");
         model4.setPlaying(false);
@@ -259,7 +259,7 @@ public class VoiceActivity extends AppCompatActivity {
 
         TimeLineModel model5 = new TimeLineModel();
         model5.setTitle("椰梦长廊");
-        model.setUrl("https://baike.baidu.com/item/"+model.getTitle());
+        model5.setUrl("https://baike.baidu.com/item/"+model5.getTitle());
         model5.setImg("https://dimg05.c-ctrip.com/images/fd/tg/g2/M03/8E/90/CghzgVWxFkKAdOeMACHAZkL2Ob0476_D_180_180.jpg");
         model5.setMessage("椰梦长廊位于三亚湾的海岸线上，葱郁的椰林、洁白的沙滩、一望无际的大海，构成了这里的美景。慢悠悠地走着，或者租辆单车骑行，都无比惬意。");
         model5.setPlaying(false);
@@ -268,7 +268,7 @@ public class VoiceActivity extends AppCompatActivity {
 
         TimeLineModel model6 = new TimeLineModel();
         model6.setTitle("蜈支洲岛");
-        model.setUrl("https://baike.baidu.com/item/"+model.getTitle());
+        model6.setUrl("https://baike.baidu.com/item/"+model6.getTitle());
         model6.setImg("https://dimg05.c-ctrip.com/images/fd/tg/g1/M0B/7F/99/CghzfFWw9WKAbGoyABJRTZ3Fifw127_D_180_180.jpg");
         model6.setMessage("蜈支洲岛的海水清澈，能见度非常高，其中的观日岩是绝佳的观景点。岛上的娱乐设施也很齐全，项目种类丰富。");
         model6.setPlaying(false);
@@ -277,7 +277,7 @@ public class VoiceActivity extends AppCompatActivity {
 
         TimeLineModel model7 = new TimeLineModel();
         model7.setTitle("第一市场");
-        model.setUrl("https://baike.baidu.com/item/"+model.getTitle());
+        model7.setUrl("https://baike.baidu.com/item/"+model7.getTitle());
         model7.setImg("https://dimg08.c-ctrip.com/images/fd/tg/g1/M07/7A/DC/CghzfVWwuHeACFZQABD-1Z8NBvI018_D_180_180.jpg");
         model7.setMessage("第一市场是许多游客吃海鲜的首选之地，这里的海鲜新鲜又便宜，在集贸市场里买了海鲜之后就近找加工店加工，比去大饭店吃要便宜很多。");
         model7.setPlaying(false);
@@ -286,7 +286,7 @@ public class VoiceActivity extends AppCompatActivity {
 
         TimeLineModel model8 = new TimeLineModel();
         model8.setTitle("珠江南田温泉");
-        model.setUrl("https://baike.baidu.com/item/"+model.getTitle());
+        model8.setUrl("https://baike.baidu.com/item/"+model8.getTitle());
         model8.setImg("https://dimg03.c-ctrip.com/images/tg/643/495/089/70fcb8ca31ad4e50b02f658da12aed07_D_180_180.jpg");
         model8.setMessage("珠江南田温泉是三亚知名度非常高的温泉区，汤池的种类丰富，环境也很有特色，给人一种在热带雨林中泡温泉的感觉。");
         model8.setPlaying(false);
@@ -295,7 +295,7 @@ public class VoiceActivity extends AppCompatActivity {
 
         TimeLineModel model9 = new TimeLineModel();
         model9.setTitle("大东海");
-        model.setUrl("https://baike.baidu.com/item/"+model.getTitle());
+        model9.setUrl("https://baike.baidu.com/item/"+model9.getTitle());
         model9.setImg("https://dimg03.c-ctrip.com/images/fd/tg/g3/M08/0B/4B/CggYGVXAOoOAU3K1ACd6fZ_ann4456_D_180_180.jpg");
         model9.setMessage("大东海是一片三面环山的月牙形海湾，这里水清沙软，也比较适合游泳和潜水。大东海一带有许多价格实惠的海景公寓，很适合来此小住些日子。");
         model9.setPlaying(false);
@@ -304,7 +304,7 @@ public class VoiceActivity extends AppCompatActivity {
 
         TimeLineModel model10 = new TimeLineModel();
         model10.setTitle("三亚千古情景区");
-        model.setUrl("https://baike.baidu.com/item/"+model.getTitle());
+        model10.setUrl("https://baike.baidu.com/item/"+model10.getTitle());
         model10.setImg("https://dimg09.c-ctrip.com/images/100a0700000020xmg4C78_D_180_180.jpg");
         model10.setMessage("三亚千古情景区内有许多有意思的小表演，但最值得一看的是大型歌舞秀《三亚千古情》，每一个场景都编排得十分震撼。");
         model10.setPlaying(false);

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Message;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -106,6 +107,10 @@ public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineViewHolder> {
 
         //点击事件
         holder.img.setOnClickListener((View view)->{
+            if(TextUtils.isEmpty(timeLineModel.getUrl())){
+                T.showShort(mContext,"没有更多详情了");
+                return;
+            }
             Intent intent = new Intent(mContext, WebActivity.class);
             intent.putExtra("url", timeLineModel.getUrl());
             mContext.startActivity(intent);

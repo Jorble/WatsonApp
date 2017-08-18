@@ -1,6 +1,7 @@
 package com.giant.watsonapp.voice;
 
 import android.content.Context;
+import android.os.Message;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -9,13 +10,18 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.giant.watsonapp.Const;
 import com.giant.watsonapp.R;
 import com.giant.watsonapp.models.OrderStatus;
 import com.giant.watsonapp.models.Orientation;
 import com.giant.watsonapp.models.TimeLineModel;
 import com.giant.watsonapp.utils.DateTimeUtils;
+import com.giant.watsonapp.utils.L;
+import com.giant.watsonapp.utils.T;
 import com.giant.watsonapp.utils.VectorDrawableUtils;
 import com.github.vipulasri.timelineview.TimelineView;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.List;
 
@@ -74,13 +80,15 @@ public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineViewHolder> {
 
         holder.title.setText(timeLineModel.getTitle());
         holder.message.setText(timeLineModel.getMessage());
-        holder.message.refreshText();
 
         if(timeLineModel.isPlaying()){
-            holder.play.setImageResource(R.mipmap.ic_launcher);
+            holder.play.setImageResource(R.mipmap.icon_voice_pause);
+            holder.message.setExpand(true);//展开文字
         }else {
-            holder.play.setImageResource(R.mipmap.avatar_myself);
+            holder.play.setImageResource(R.mipmap.icon_voice_play);
+            holder.message.setExpand(false);//折叠文字
         }
+        holder.message.refreshText();
 
         Glide
                 .with(mContext)
@@ -88,6 +96,37 @@ public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineViewHolder> {
                 .placeholder(R.mipmap.refresh_loading01)
                 .bitmapTransform(new CropCircleTransformation(mContext))
                 .into(holder.img);
+
+        //点击事件
+        holder.play.setOnClickListener((View view)->{
+            //停止播放中的item
+            for(int i=0;i<mFeedList.size();i++){
+                if(mFeedList.get(i).isPlaying() && i != position){
+                    mFeedList.get(i).setPlaying(false);
+                    notifyItemChanged(i);
+                }
+            }
+
+            //播放当前item
+            if(timeLineModel.isPlaying()){
+                L.i("点击了暂停");
+                timeLineModel.setPlaying(false);
+                Message message=new Message();
+                message.what = Const.BUS_VOICE_STOP;
+                message.obj = timeLineModel;
+                EventBus.getDefault().post(message);
+            }else {
+                L.i("点击了播放");
+                timeLineModel.setPlaying(true);
+                Message message=new Message();
+                message.what = Const.BUS_VOICE_PLAY;
+                message.obj = timeLineModel;
+                EventBus.getDefault().post(message);
+            }
+
+            //刷新界面
+            notifyItemChanged(position);
+        });
     }
 
     @Override

@@ -8,6 +8,8 @@ import com.giant.watsonapp.models.GreenDaoManager;
 import com.giant.watsonapp.utils.ACache;
 import com.giant.watsonapp.utils.JdbcUtil;
 import com.giant.watsonapp.utils.L;
+import com.iflytek.cloud.SpeechConstant;
+import com.iflytek.cloud.SpeechUtility;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,8 +28,11 @@ public class App extends Application {
 
         //Green Dao
         GreenDaoManager.setupDatabase(this,"watsonapp.db");
-
 //        initDbData();
+
+        // 将“12345678”替换成您申请的APPID，申请地址：http://www.xfyun.cn
+        // 请勿在“=”与appid之间添加任何空字符或者转义符
+        SpeechUtility.createUtility(this, SpeechConstant.APPID +"=5996516b");
 
     }
 

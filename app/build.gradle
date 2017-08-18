@@ -39,6 +39,10 @@ android {
             jniLibs.srcDirs = ['libs']
         }
     }
+
+    dexOptions{
+        jumboMode true
+    }
 }
 
 //greendao配置
@@ -95,6 +99,7 @@ dependencies {
     compile 'com.zhy:autolayout:1.4.5'
     compile 'com.github.vipulasri:timelineview:1.0.5'
     compile 'jp.wasabeef:glide-transformations:2.0.2'
+    compile 'org.greenrobot:eventbus:3.0.0'
     testCompile 'junit:junit:4.12'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.7.0'
 }

@@ -65,7 +65,7 @@ public class SettingActivity extends AppCompatActivity {
         initUI();
     }
 
-    @OnClick({R.id.back_iv, R.id.save_bt, R.id.add_classifier_bt, R.id.reset_bt})
+    @OnClick({R.id.back_iv, R.id.save_bt, R.id.add_classifier_bt, R.id.reset_bt,R.id.iflytek_tts_bt})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.back_iv:
@@ -79,6 +79,9 @@ public class SettingActivity extends AppCompatActivity {
                 break;
             case R.id.reset_bt:
                 reset();
+                break;
+            case R.id.iflytek_tts_bt:
+                UiUtils.startActivity(this,TtsSettings.class);
                 break;
         }
     }

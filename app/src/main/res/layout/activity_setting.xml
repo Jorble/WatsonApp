@@ -252,6 +252,19 @@
                     android:text="恢复默认"/>
             </LinearLayout>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_margin="3dp"
+                android:gravity="center_vertical">
+                <Button
+                    android:id="@+id/iflytek_tts_bt"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/shape_bg_corner"
+                    android:text="讯飞语音合成"/>
+            </LinearLayout>
+
         </LinearLayout>
     </ScrollView>
     

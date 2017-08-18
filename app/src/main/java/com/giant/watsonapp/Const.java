@@ -79,4 +79,9 @@ public class Const {
     public static final String WATSON_VR_CLASSNAME_DEFAULT_1="island";
     public static final String WATSON_VR_CLASSID_DEFAULT_1="island_1142199889";
 
+    /**
+     * EventBus标识常量
+     */
+    public static final int BUS_VOICE_PLAY=0;
+    public static final int BUS_VOICE_STOP=1;
 }

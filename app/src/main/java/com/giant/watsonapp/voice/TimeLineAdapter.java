@@ -101,7 +101,7 @@ public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineViewHolder> {
         Glide
                 .with(mContext)
                 .load(timeLineModel.getImg())
-                .placeholder(R.mipmap.refresh_loading01)
+                .placeholder(R.mipmap.pic_spot_default)
                 .bitmapTransform(new CropCircleTransformation(mContext))
                 .into(holder.img);
 

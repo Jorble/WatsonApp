@@ -12,11 +12,13 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.giant.watsonapp.chat.ChatActivity;
+import com.giant.watsonapp.map.MapActivity;
 import com.giant.watsonapp.setting.SettingActivity;
 import com.giant.watsonapp.utils.DoubleClickExitHelper;
 import com.giant.watsonapp.utils.GlideRoundTransform;
 import com.giant.watsonapp.utils.UiUtils;
 import com.giant.watsonapp.voice.VoiceActivity;
+import com.iflytek.cloud.thirdparty.M;
 import com.jaeger.library.StatusBarUtil;
 import com.youth.banner.Banner;
 import com.youth.banner.BannerConfig;
@@ -89,6 +91,7 @@ public class MainActivity extends AppCompatActivity {
             case R.id.menu_basic:
                 break;
             case R.id.menu_traffic:
+               UiUtils.startActivity(this, MapActivity.class);
                 break;
             case R.id.menu_hotel:
                 break;

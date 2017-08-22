@@ -1,6 +1,7 @@
 package com.giant.watsonapp.map;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -13,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
@@ -20,14 +22,25 @@ import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.BitmapDescriptor;
+import com.baidu.mapapi.map.BitmapDescriptorFactory;
+import com.baidu.mapapi.map.GroundOverlayOptions;
+import com.baidu.mapapi.map.InfoWindow;
 import com.baidu.mapapi.map.MapStatus;
+import com.baidu.mapapi.map.MapStatusUpdate;
 import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MapView;
+import com.baidu.mapapi.map.Marker;
+import com.baidu.mapapi.map.MarkerOptions;
 import com.baidu.mapapi.map.MyLocationConfiguration;
 import com.baidu.mapapi.map.MyLocationData;
+import com.baidu.mapapi.map.OverlayOptions;
 import com.baidu.mapapi.model.LatLng;
+import com.baidu.mapapi.model.LatLngBounds;
 import com.giant.watsonapp.R;
 import com.jaeger.library.StatusBarUtil;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -69,7 +82,16 @@ public class MapActivity extends AppCompatActivity implements SensorEventListene
     private float direction;
 
     Context context;
-    
+
+    // 绘制覆盖物
+    private List<Marker> markerList=new ArrayList<>();
+
+    private InfoWindow mInfoWindow;
+
+    // 初始化全局 bitmap 信息，不用时及时 recycle
+    BitmapDescriptor bd = BitmapDescriptorFactory
+            .fromResource(R.mipmap.icon_location);
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,10 +102,35 @@ public class MapActivity extends AppCompatActivity implements SensorEventListene
         titleTv.setText("地图");
 
         mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);//获取传感器管理服务
-        mCurrentMode = MyLocationConfiguration.LocationMode.NORMAL;
+        mCurrentMode = MyLocationConfiguration.LocationMode.FOLLOWING;//带方向的定位
 
         // 地图初始化
         mBaiduMap = bmapView.getMap();
+
+        //绘制标记
+        initOverlay();
+        mBaiduMap.setOnMarkerClickListener(new BaiduMap.OnMarkerClickListener() {
+            public boolean onMarkerClick(final Marker marker) {
+                Button button = new Button(getApplicationContext());
+                button.setBackgroundResource(R.color.theme_color);
+                InfoWindow.OnInfoWindowClickListener listener = null;
+                for (int i=0;i<markerList.size();i++) {
+                    if (marker == markerList.get(i)) {
+                        button.setText(marker.getTitle());
+                        button.setTextColor(Color.WHITE);
+                        button.setAlpha(0.8f);
+                        button.setWidth(400);
+
+                        marker.setAlpha(0.8f);
+                        LatLng ll = marker.getPosition();
+                        mInfoWindow = new InfoWindow(BitmapDescriptorFactory.fromView(button), ll, -50, listener);
+                        mBaiduMap.showInfoWindow(mInfoWindow);
+                    }
+                }
+                return true;
+            }
+        });
+
         // 开启定位图层
         mBaiduMap.setMyLocationEnabled(true);
         // 定位初始化
@@ -95,6 +142,110 @@ public class MapActivity extends AppCompatActivity implements SensorEventListene
         option.setScanSpan(1000);
         mLocClient.setLocOption(option);
         mLocClient.start();
+        // 标识定位方向
+        mBaiduMap.setMyLocationConfiguration(new MyLocationConfiguration(
+                mCurrentMode, true, mCurrentMarker));
+        //切到当前定位
+        MapStatus.Builder builder = new MapStatus.Builder();
+        builder.overlook(0);
+        mBaiduMap.animateMapStatus(MapStatusUpdateFactory.newMapStatus(builder.build()));
+
+    }
+
+    /**
+     * 初始化标记
+     */
+    public void initOverlay() {
+        // add marker overlay
+        MarkerOptions oo = new MarkerOptions()
+                .position(new LatLng(18.25797,109.659829))
+                .icon(bd)
+                .title("亚龙湾热带天堂森林公园");
+        oo.animateType(MarkerOptions.MarkerAnimateType.grow);
+        markerList.add((Marker) (mBaiduMap.addOverlay(oo)));
+
+        MarkerOptions oo2 = new MarkerOptions()
+                .position(new LatLng(18.236155,109.654556))
+                .icon(bd)
+                .title("亚龙湾");
+        oo2.animateType(MarkerOptions.MarkerAnimateType.grow);
+        markerList.add((Marker) (mBaiduMap.addOverlay(oo2)));
+
+        MarkerOptions oo3 = new MarkerOptions()
+                .position(new LatLng(18.310497,109.21997))
+                .icon(bd)
+                .title("南山文化旅游区");
+        oo3.animateType(MarkerOptions.MarkerAnimateType.grow);
+        markerList.add((Marker) (mBaiduMap.addOverlay(oo3)));
+
+        MarkerOptions oo4 = new MarkerOptions()
+                .position(new LatLng(18.300306,109.357845))
+                .icon(bd)
+                .title("天涯海角");
+        oo4.animateType(MarkerOptions.MarkerAnimateType.grow);
+        markerList.add((Marker) (mBaiduMap.addOverlay(oo4)));
+
+        MarkerOptions oo5 = new MarkerOptions()
+                .position(new LatLng(18.276361,109.488119))
+                .icon(bd)
+                .title("椰梦长廊");
+        oo5.animateType(MarkerOptions.MarkerAnimateType.grow);
+        markerList.add((Marker) (mBaiduMap.addOverlay(oo5)));
+
+        MarkerOptions oo6 = new MarkerOptions()
+                .position(new LatLng(18.320088,109.770888))
+                .icon(bd)
+                .title("蜈支洲岛");
+        oo6.animateType(MarkerOptions.MarkerAnimateType.grow);
+        markerList.add((Marker) (mBaiduMap.addOverlay(oo6)));
+
+        MarkerOptions oo7 = new MarkerOptions()
+                .position(new LatLng(18.244147,109.515652))
+                .icon(bd)
+                .title("第一市场");
+        oo7.animateType(MarkerOptions.MarkerAnimateType.grow);
+        markerList.add((Marker) (mBaiduMap.addOverlay(oo7)));
+
+        MarkerOptions oo8 = new MarkerOptions()
+                .position(new LatLng(18.414564,109.735525))
+                .icon(bd)
+                .title("珠江南田温泉");
+        oo8.animateType(MarkerOptions.MarkerAnimateType.grow);
+        markerList.add((Marker) (mBaiduMap.addOverlay(oo8)));
+
+        MarkerOptions oo9 = new MarkerOptions()
+                .position(new LatLng(18.228685,109.530103))
+                .icon(bd)
+                .title("大东海");
+        oo9.animateType(MarkerOptions.MarkerAnimateType.grow);
+        markerList.add((Marker) (mBaiduMap.addOverlay(oo9)));
+
+        MarkerOptions oo10 = new MarkerOptions()
+                .position(new LatLng(18.298032,109.537426))
+                .icon(bd)
+                .title("三亚千古情景区");
+        oo10.animateType(MarkerOptions.MarkerAnimateType.grow);
+        markerList.add((Marker) (mBaiduMap.addOverlay(oo10)));
+    }
+
+    /**
+     * 清除所有Overlay
+     *
+     * @param view
+     */
+    public void clearOverlay(View view) {
+        mBaiduMap.clear();
+        markerList.clear();
+    }
+
+    /**
+     * 重新添加Overlay
+     *
+     * @param view
+     */
+    public void resetOverlay(View view) {
+        clearOverlay(null);
+        initOverlay();
     }
 
     @OnClick({R.id.back_iv, R.id.title_tv})
@@ -194,5 +345,7 @@ public class MapActivity extends AppCompatActivity implements SensorEventListene
         bmapView.onDestroy();
         bmapView = null;
         super.onDestroy();
+        // 回收 bitmap 资源
+        bd.recycle();
     }
 }

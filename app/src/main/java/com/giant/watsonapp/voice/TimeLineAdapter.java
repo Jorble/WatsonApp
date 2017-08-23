@@ -41,14 +41,14 @@ import static android.R.id.message;
  */
 public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineViewHolder> {
 
-    private List<TimeLineModel> mFeedList;
+    private List<TimeLineModel> mDatas;
     private Context mContext;
     private Orientation mOrientation;
     private boolean mWithLinePadding;
     private LayoutInflater mLayoutInflater;
 
     public TimeLineAdapter(List<TimeLineModel> feedList, Orientation orientation, boolean withLinePadding) {
-        mFeedList = feedList;
+        mDatas = feedList;
         mOrientation = orientation;
         mWithLinePadding = withLinePadding;
     }
@@ -76,7 +76,7 @@ public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineViewHolder> {
     @Override
     public void onBindViewHolder(TimeLineViewHolder holder, int position) {
 
-        TimeLineModel timeLineModel = mFeedList.get(position);
+        TimeLineModel timeLineModel = mDatas.get(position);
 
         if(timeLineModel.getStatus() == OrderStatus.INACTIVE) {
             holder.mTimelineView.setMarker(VectorDrawableUtils.getDrawable(mContext, R.drawable.ic_marker_inactive, R.color.theme_color));
@@ -118,9 +118,9 @@ public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineViewHolder> {
 
         holder.play.setOnClickListener((View view)->{
             //停止播放中的item
-            for(int i=0;i<mFeedList.size();i++){
-                if(mFeedList.get(i).isPlaying() && i != position){
-                    mFeedList.get(i).setPlaying(false);
+            for(int i=0;i<mDatas.size();i++){
+                if(mDatas.get(i).isPlaying() && i != position){
+                    mDatas.get(i).setPlaying(false);
                     notifyItemChanged(i);
                 }
             }
@@ -152,7 +152,7 @@ public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineViewHolder> {
 
     @Override
     public int getItemCount() {
-        return (mFeedList!=null? mFeedList.size():0);
+        return (mDatas!=null? mDatas.size():0);
     }
 
     /**
@@ -162,7 +162,7 @@ public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineViewHolder> {
      * @param newModel
      */
     public void setItem(int position, TimeLineModel newModel) {
-        mFeedList.set(position, newModel);
+        mDatas.set(position, newModel);
         notifyItemChanged(position);
     }
 
@@ -173,6 +173,6 @@ public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineViewHolder> {
      * @param newModel
      */
     public void setItem(TimeLineModel oldModel, TimeLineModel newModel) {
-        setItem(mFeedList.indexOf(oldModel), newModel);
+        setItem(mDatas.indexOf(oldModel), newModel);
     }
 }

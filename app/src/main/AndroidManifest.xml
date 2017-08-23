@@ -29,7 +29,6 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <!-- 这个权限用于进行网络定位 -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
@@ -46,7 +45,9 @@
     <uses-feature android:name="android.hardware.camera" />
 
     <!-- OpenGLES 2.0 -->
-    <uses-feature android:glEsVersion="0x00020000" android:required="true" />
+    <uses-feature
+        android:glEsVersion="0x00020000"
+        android:required="true" />
 
     <supports-screens
         android:anyDensity="true"
@@ -112,7 +113,8 @@
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
         <activity android:name=".voice.VoiceActivity" />
         <activity android:name=".setting.TtsSettings" />
-        <activity android:name=".map.MapActivity"></activity>
+        <activity android:name=".map.MapActivity" />
+        <activity android:name=".hotel.HotelActivity"></activity>
     </application>
 
 </manifest>

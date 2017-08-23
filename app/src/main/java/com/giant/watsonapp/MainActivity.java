@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.giant.watsonapp.chat.ChatActivity;
+import com.giant.watsonapp.hotel.HotelActivity;
 import com.giant.watsonapp.map.MapActivity;
 import com.giant.watsonapp.setting.SettingActivity;
 import com.giant.watsonapp.utils.DoubleClickExitHelper;
@@ -94,6 +95,7 @@ public class MainActivity extends AppCompatActivity {
                UiUtils.startActivity(this, MapActivity.class);
                 break;
             case R.id.menu_hotel:
+                UiUtils.startActivity(this, HotelActivity.class);
                 break;
             case R.id.menu_food:
                 break;

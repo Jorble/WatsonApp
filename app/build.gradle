@@ -105,7 +105,8 @@ dependencies {
     compile 'com.github.vipulasri:timelineview:1.0.5'
     compile 'jp.wasabeef:glide-transformations:2.0.2'
     compile 'org.greenrobot:eventbus:3.0.0'
+    compile 'com.android.support:multidex:1.0.1'
+    compile 'me.zhanghai.android.materialratingbar:library:1.0.2'
     testCompile 'junit:junit:4.12'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.7.0'
-    compile 'com.android.support:multidex:1.0.1'
 }

@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -93,16 +94,17 @@ public class MapActivity extends AppCompatActivity implements SensorEventListene
 
     Context context;
 
-    // 绘制覆盖物
-    private double mSanYaLat = 18.236155;//三亚坐标
-    private double mSanYaLon = 109.654556;//三亚坐标
+    //三亚景点中心坐标
+    private double mSanYaLat = 18.244147;
+    private double mSanYaLon = 109.515652;
     private int[] imgs = {
-            R.mipmap.sanya01,R.mipmap.sanya02,R.mipmap.sanya03,R.mipmap.sanya04,
-            R.mipmap.sanya05,R.mipmap.sanya06,R.mipmap.sanya07,R.mipmap.sanya08,
-            R.mipmap.sanya09,R.mipmap.sanya10
+            R.mipmap.sanya01, R.mipmap.sanya02, R.mipmap.sanya03, R.mipmap.sanya04,
+            R.mipmap.sanya05, R.mipmap.sanya06, R.mipmap.sanya07, R.mipmap.sanya08,
+            R.mipmap.sanya09, R.mipmap.sanya10
     };
 
-    private List<Marker> markerList=new ArrayList<>();
+    // 绘制覆盖物
+    private List<Marker> markerList = new ArrayList<>();
 
     private InfoWindow mInfoWindow;
 
@@ -133,28 +135,26 @@ public class MapActivity extends AppCompatActivity implements SensorEventListene
         mBaiduMap.setOnMarkerClickListener(new BaiduMap.OnMarkerClickListener() {
             public boolean onMarkerClick(final Marker marker) {
                 //xml转视图
-                LayoutInflater inflater=(LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                View view=inflater.inflate(R.layout.pop_map_info, null);
-                TextView textView = (TextView)view.findViewById(R.id.title_tv);
-                ImageView imageView = (ImageView)view.findViewById(R.id.img_iv);
+                LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                View view = inflater.inflate(R.layout.pop_map_info, null);
+                TextView textView = (TextView) view.findViewById(R.id.title_tv);
+                ImageView imageView = (ImageView) view.findViewById(R.id.img_iv);
 
                 InfoWindow.OnInfoWindowClickListener listener = null;
-                for (int i=0;i<markerList.size();i++) {
+                for (int i = 0; i < markerList.size(); i++) {
                     if (marker == markerList.get(i)) {
                         textView.setText(marker.getTitle());
                         imageView.setImageResource(imgs[i]);
-                        listener = new InfoWindow.OnInfoWindowClickListener() {
-                            public void onInfoWindowClick() {
-                                T.showShort(context,"开始导航...");
+                        listener = () -> {
+                            T.showShort(context, "开始导航...");
 
-                                String fromName = "我的位置";
-                                LatLng fromLoc = new LatLng(mCurrentLat, mCurrentLon);
+                            String fromName = "我的位置";
+                            LatLng fromLoc = new LatLng(mCurrentLat, mCurrentLon);
 
-                                String toName = marker.getTitle();
-                                LatLng toLoc = marker.getPosition();
+                            String toName = marker.getTitle();
+                            LatLng toLoc = marker.getPosition();
 
-                                startNavi(fromName,fromLoc,toName,toLoc);
-                            }
+                            startNavi(fromName, fromLoc, toName, toLoc);
                         };
 
                         LatLng ll = marker.getPosition();
@@ -195,77 +195,77 @@ public class MapActivity extends AppCompatActivity implements SensorEventListene
     public void initOverlay() {
         // add marker overlay
         MarkerOptions oo = new MarkerOptions()
-                .position(new LatLng(18.25797,109.659829))
+                .position(new LatLng(18.25797, 109.659829))
                 .icon(bd)
                 .title("亚龙湾热带天堂森林公园");
         oo.animateType(MarkerOptions.MarkerAnimateType.grow);
         markerList.add((Marker) (mBaiduMap.addOverlay(oo)));
 
         MarkerOptions oo2 = new MarkerOptions()
-                .position(new LatLng(18.236155,109.654556))
+                .position(new LatLng(18.236155, 109.654556))
                 .icon(bd)
                 .title("亚龙湾");
         oo2.animateType(MarkerOptions.MarkerAnimateType.grow);
         markerList.add((Marker) (mBaiduMap.addOverlay(oo2)));
 
         MarkerOptions oo3 = new MarkerOptions()
-                .position(new LatLng(18.310497,109.21997))
+                .position(new LatLng(18.310497, 109.21997))
                 .icon(bd)
                 .title("南山文化旅游区");
         oo3.animateType(MarkerOptions.MarkerAnimateType.grow);
         markerList.add((Marker) (mBaiduMap.addOverlay(oo3)));
 
         MarkerOptions oo4 = new MarkerOptions()
-                .position(new LatLng(18.300306,109.357845))
+                .position(new LatLng(18.300306, 109.357845))
                 .icon(bd)
                 .title("天涯海角");
         oo4.animateType(MarkerOptions.MarkerAnimateType.grow);
         markerList.add((Marker) (mBaiduMap.addOverlay(oo4)));
 
         MarkerOptions oo5 = new MarkerOptions()
-                .position(new LatLng(18.276361,109.488119))
+                .position(new LatLng(18.276361, 109.488119))
                 .icon(bd)
                 .title("椰梦长廊");
         oo5.animateType(MarkerOptions.MarkerAnimateType.grow);
         markerList.add((Marker) (mBaiduMap.addOverlay(oo5)));
 
         MarkerOptions oo6 = new MarkerOptions()
-                .position(new LatLng(18.320088,109.770888))
+                .position(new LatLng(18.320088, 109.770888))
                 .icon(bd)
                 .title("蜈支洲岛");
         oo6.animateType(MarkerOptions.MarkerAnimateType.grow);
         markerList.add((Marker) (mBaiduMap.addOverlay(oo6)));
 
         MarkerOptions oo7 = new MarkerOptions()
-                .position(new LatLng(18.244147,109.515652))
+                .position(new LatLng(18.244147, 109.515652))
                 .icon(bd)
                 .title("第一市场");
         oo7.animateType(MarkerOptions.MarkerAnimateType.grow);
         markerList.add((Marker) (mBaiduMap.addOverlay(oo7)));
 
         MarkerOptions oo8 = new MarkerOptions()
-                .position(new LatLng(18.414564,109.735525))
+                .position(new LatLng(18.414564, 109.735525))
                 .icon(bd)
                 .title("珠江南田温泉");
         oo8.animateType(MarkerOptions.MarkerAnimateType.grow);
         markerList.add((Marker) (mBaiduMap.addOverlay(oo8)));
 
         MarkerOptions oo9 = new MarkerOptions()
-                .position(new LatLng(18.228685,109.530103))
+                .position(new LatLng(18.228685, 109.530103))
                 .icon(bd)
                 .title("大东海");
         oo9.animateType(MarkerOptions.MarkerAnimateType.grow);
         markerList.add((Marker) (mBaiduMap.addOverlay(oo9)));
 
         MarkerOptions oo10 = new MarkerOptions()
-                .position(new LatLng(18.298032,109.537426))
+                .position(new LatLng(18.298032, 109.537426))
                 .icon(bd)
                 .title("三亚千古情景区");
         oo10.animateType(MarkerOptions.MarkerAnimateType.grow);
         markerList.add((Marker) (mBaiduMap.addOverlay(oo10)));
 
         //半透明
-        for(Marker marker:markerList){
+        for (Marker marker : markerList) {
             marker.setAlpha(0.8f);
         }
     }
@@ -273,7 +273,7 @@ public class MapActivity extends AppCompatActivity implements SensorEventListene
     /**
      * 启动百度地图导航(Native)
      */
-    public void startNavi(String fromName,LatLng fromLoc,String toName,LatLng toLoc) {
+    public void startNavi(String fromName, LatLng fromLoc, String toName, LatLng toLoc) {
 
         // 构建 导航参数
         NaviParaOption para = new NaviParaOption()
@@ -286,7 +286,8 @@ public class MapActivity extends AppCompatActivity implements SensorEventListene
             BaiduMapNavigation.openBaiduMapNavi(para, this);
         } catch (BaiduMapAppNotSupportNaviException e) {
             e.printStackTrace();
-            showDialog();
+            T.showShort(context, "您尚未安装百度地图app或app版本过低");
+//            showDialog();
         }
 
     }
@@ -317,14 +318,14 @@ public class MapActivity extends AppCompatActivity implements SensorEventListene
 
     }
 
-    @OnClick({R.id.back_iv, R.id.title_tv,R.id.showMyLoc_iv,R.id.showSpotLoc_iv})
+    @OnClick({R.id.back_iv, R.id.title_tv, R.id.showMyLoc_iv, R.id.showSpotLoc_iv})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.back_iv:
                 finish();
                 break;
             case R.id.showMyLoc_iv:
-                ms  = new MapStatus.Builder()
+                ms = new MapStatus.Builder()
                         .target(new LatLng(mCurrentLat, mCurrentLon))
                         .overlook(0)
                         .zoom(17)
@@ -332,11 +333,11 @@ public class MapActivity extends AppCompatActivity implements SensorEventListene
                 mBaiduMap.animateMapStatus(MapStatusUpdateFactory.newMapStatus(ms));
                 break;
             case R.id.showSpotLoc_iv:
-                ms  = new MapStatus.Builder()
-                    .target(new LatLng(mSanYaLat, mSanYaLon))
-                    .overlook(0)
-                    .zoom(11)
-                    .build();
+                ms = new MapStatus.Builder()
+                        .target(new LatLng(mSanYaLat, mSanYaLon))
+                        .overlook(0)
+                        .zoom(11)
+                        .build();
                 mBaiduMap.animateMapStatus(MapStatusUpdateFactory.newMapStatus(ms));
                 break;
             case R.id.title_tv:

@@ -10,15 +10,10 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.giant.watsonapp.R;
 import com.giant.watsonapp.models.Hotel;
 import com.giant.watsonapp.utils.L;
-import com.giant.watsonapp.voice.TimeLineAdapter;
 import com.jaeger.library.StatusBarUtil;
-import com.zhy.adapter.recyclerview.CommonAdapter;
-import com.zhy.adapter.recyclerview.base.ViewHolder;
-import com.zhy.autolayout.utils.AutoUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,8 +21,6 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import jp.wasabeef.glide.transformations.CropCircleTransformation;
-import me.zhanghai.android.materialratingbar.MaterialRatingBar;
 
 public class HotelActivity extends AppCompatActivity {
 
@@ -63,17 +56,31 @@ public class HotelActivity extends AppCompatActivity {
      * 初始化数据
      */
     private void initData(){
-        L.i("initData");
         for(int i=0;i<10;i++){
             Hotel.HotelListBean bean=new Hotel.HotelListBean();
             bean.setName("三亚海韵度假酒店");
             bean.setPrice("¥760");
-            bean.setStar(4.38f);
+            bean.setStar(4.8f);
             List<String> imgList=new ArrayList<>();
             imgList.add("https://dimg04.c-ctrip.com/images/20070d0000006tk9o3BD0_C_550_412_Q50.jpg");
+            imgList.add("https://dimg04.c-ctrip.com/images/200d0800000037bf26045_C_300_225_Q50.jpg_.webp");
+            imgList.add("https://dimg04.c-ctrip.com/images/fd/hotel/g3/M02/C4/0E/CggYGlX8tdSAWvcGAAJfb6Rsqao013_C_300_225_Q50.jpg_.webp");
             bean.setImgList(imgList);
+            bean.setLocation("三亚湾路168号（近海虹路）");
+
+            List<Hotel.HotelListBean.RoomListBean> roomList=new ArrayList<>();
+            for(int j=0;j<5;j++){
+                Hotel.HotelListBean.RoomListBean roomListBean=new Hotel.HotelListBean.RoomListBean();
+                roomListBean.setName("豪华海景套房");
+                roomListBean.setPrice("¥792");
+                roomListBean.setDesc("85-90m² 大/双床 6-19层");
+                roomListBean.setImg("http://dimg04.c-ctrip.com/images/200p04000000017v61559_C_130_130_Q50.jpg");
+                roomListBean.setImpression("视野开阔");
+                roomList.add(roomListBean);
+            }
+            bean.setRoomList(roomList);
+
             mDatas.add(bean);
-            L.i("add"+i);
         }
     }
 

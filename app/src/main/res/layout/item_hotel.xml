@@ -58,14 +58,28 @@
             android:textSize="22sp"
             android:textStyle="bold" />
 
-        <me.zhanghai.android.materialratingbar.MaterialRatingBar
-            android:id="@+id/star_mrb"
-            style="@style/Widget.MaterialRatingBar.RatingBar.Indicator.Small"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:stepSize="0.01"
-            app:mrb_progressTint="@color/theme_color"
-            app:mrb_secondaryProgressTint="@color/theme_color" />
+            android:gravity="center_vertical">
+            <me.zhanghai.android.materialratingbar.MaterialRatingBar
+                android:id="@+id/star_mrb"
+                style="@style/Widget.MaterialRatingBar.RatingBar.Indicator.Small"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:stepSize="0.01"
+                app:mrb_progressTint="@color/theme_color"
+                app:mrb_secondaryProgressTint="@color/theme_color" />
+            <TextView
+                android:id="@+id/star_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="3dp"
+                android:textColor="@color/theme_color"
+                android:textSize="@dimen/text_size3"
+                android:text="4.38"/>
+        </LinearLayout>
 
     </LinearLayout>
 

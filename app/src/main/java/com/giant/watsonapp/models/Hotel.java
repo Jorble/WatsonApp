@@ -1,5 +1,6 @@
 package com.giant.watsonapp.models;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -42,7 +43,7 @@ public class Hotel {
         this.hotelList = hotelList;
     }
 
-    public static class HotelListBean {
+    public static class HotelListBean implements Serializable{
         /**
          * id : 26754
          * name : 三亚海韵度假酒店
@@ -117,7 +118,7 @@ public class Hotel {
             this.roomList = roomList;
         }
 
-        public static class RoomListBean {
+        public static class RoomListBean implements Serializable{
             /**
              * name : 豪华海景套房
              * price : ¥760

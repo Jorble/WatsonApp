@@ -114,7 +114,8 @@
         <activity android:name=".voice.VoiceActivity" />
         <activity android:name=".setting.TtsSettings" />
         <activity android:name=".map.MapActivity" />
-        <activity android:name=".hotel.HotelActivity"></activity>
+        <activity android:name=".hotel.HotelActivity" />
+        <activity android:name=".hotel.HotelDetailActivity"></activity>
     </application>
 
 </manifest>

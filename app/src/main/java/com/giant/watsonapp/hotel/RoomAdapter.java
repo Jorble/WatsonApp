@@ -7,29 +7,23 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.giant.watsonapp.R;
 import com.giant.watsonapp.models.Hotel;
-import com.giant.watsonapp.models.TimeLineModel;
-import com.giant.watsonapp.utils.T;
-import com.giant.watsonapp.utils.UiUtils;
 
 import java.util.List;
-
-import static com.iflytek.cloud.resource.Resource.setText;
 
 /**
  * Created by HP-HP on 05-12-2015.
  */
-public class HotelAdapter extends RecyclerView.Adapter<HotelViewHolder> {
+public class RoomAdapter extends RecyclerView.Adapter<RoomViewHolder> {
 
-    private List<Hotel.HotelListBean> mDatas;
+    private List<Hotel.HotelListBean.RoomListBean> mDatas;
     private Context mContext;
     private LayoutInflater mLayoutInflater;
 
-    public HotelAdapter(List<Hotel.HotelListBean> mDatas) {
+    public RoomAdapter(List<Hotel.HotelListBean.RoomListBean> mDatas) {
         this.mDatas = mDatas;
     }
 
@@ -39,39 +33,31 @@ public class HotelAdapter extends RecyclerView.Adapter<HotelViewHolder> {
     }
 
     @Override
-    public HotelViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RoomViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         mContext = parent.getContext();
         mLayoutInflater = LayoutInflater.from(mContext);
         View view;
 
-        view = mLayoutInflater.inflate(R.layout.item_hotel, parent, false);
+        view = mLayoutInflater.inflate(R.layout.item_room, parent, false);
 
-        return new HotelViewHolder(view);
+        return new RoomViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(HotelViewHolder holder, int position) {
-        Hotel.HotelListBean model = mDatas.get(position);
+    public void onBindViewHolder(RoomViewHolder holder, int position) {
+        Hotel.HotelListBean.RoomListBean model = mDatas.get(position);
 
         holder.price.setText(model.getPrice());
         holder.name.setText(model.getName());
-        holder.star.setRating(model.getStar());
-        holder.starTv.setText(String.valueOf(model.getStar()));
+        holder.desc.setText(model.getDesc());
+        holder.impression.setText(model.getImpression());
 
         Glide
                 .with(mContext)
-                .load(model.getImgList().get(0))
+                .load(model.getImg())
                 .placeholder(R.mipmap.pic_spot_default)
                 .into(holder.img);
 
-        holder.img.setOnClickListener((View view)->{
-            Intent intent=new Intent();
-            intent.setClass(mContext,HotelDetailActivity.class);
-            Bundle mBundle = new Bundle();
-            mBundle.putSerializable("model",model);
-            intent.putExtras(mBundle);
-            mContext.startActivity(intent);
-        });
     }
 
     @Override
@@ -85,7 +71,7 @@ public class HotelAdapter extends RecyclerView.Adapter<HotelViewHolder> {
      * @param position
      * @param newModel
      */
-    public void setItem(int position, Hotel.HotelListBean newModel) {
+    public void setItem(int position, Hotel.HotelListBean.RoomListBean newModel) {
         mDatas.set(position, newModel);
         notifyItemChanged(position);
     }
@@ -96,7 +82,7 @@ public class HotelAdapter extends RecyclerView.Adapter<HotelViewHolder> {
      * @param oldModel
      * @param newModel
      */
-    public void setItem(Hotel.HotelListBean oldModel, Hotel.HotelListBean newModel) {
+    public void setItem(Hotel.HotelListBean.RoomListBean oldModel, Hotel.HotelListBean.RoomListBean newModel) {
         setItem(mDatas.indexOf(oldModel), newModel);
     }
 }

@@ -159,12 +159,9 @@ public class HotelDetailActivity extends AppCompatActivity {
      */
     private void initRoomRv(){
         recyclerView.addItemDecoration(new Divider(this));
-        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false){
-            @Override
-            public boolean canScrollVertically() {
-                return false;
-            }});
+        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         recyclerView.setHasFixedSize(true);
+        recyclerView.setNestedScrollingEnabled(false);
         adapter = new RoomAdapter(model.getRoomList());
         recyclerView.setAdapter(adapter);
     }

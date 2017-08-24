@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import com.bumptech.glide.Glide;
 import com.giant.watsonapp.R;
 import com.giant.watsonapp.models.Hotel;
+import com.giant.watsonapp.models.Room;
 
 import java.util.List;
 
@@ -19,11 +20,11 @@ import java.util.List;
  */
 public class RoomAdapter extends RecyclerView.Adapter<RoomViewHolder> {
 
-    private List<Hotel.HotelListBean.RoomListBean> mDatas;
+    private List<Room> mDatas;
     private Context mContext;
     private LayoutInflater mLayoutInflater;
 
-    public RoomAdapter(List<Hotel.HotelListBean.RoomListBean> mDatas) {
+    public RoomAdapter(List<Room> mDatas) {
         this.mDatas = mDatas;
     }
 
@@ -45,7 +46,7 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomViewHolder> {
 
     @Override
     public void onBindViewHolder(RoomViewHolder holder, int position) {
-        Hotel.HotelListBean.RoomListBean model = mDatas.get(position);
+        Room model = mDatas.get(position);
 
         holder.price.setText(model.getPrice());
         holder.name.setText(model.getName());
@@ -71,7 +72,7 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomViewHolder> {
      * @param position
      * @param newModel
      */
-    public void setItem(int position, Hotel.HotelListBean.RoomListBean newModel) {
+    public void setItem(int position, Room newModel) {
         mDatas.set(position, newModel);
         notifyItemChanged(position);
     }
@@ -82,7 +83,7 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomViewHolder> {
      * @param oldModel
      * @param newModel
      */
-    public void setItem(Hotel.HotelListBean.RoomListBean oldModel, Hotel.HotelListBean.RoomListBean newModel) {
+    public void setItem(Room oldModel, Room newModel) {
         setItem(mDatas.indexOf(oldModel), newModel);
     }
 }

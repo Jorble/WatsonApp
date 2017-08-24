@@ -25,11 +25,11 @@ import static com.iflytek.cloud.resource.Resource.setText;
  */
 public class HotelAdapter extends RecyclerView.Adapter<HotelViewHolder> {
 
-    private List<Hotel.HotelListBean> mDatas;
+    private List<Hotel> mDatas;
     private Context mContext;
     private LayoutInflater mLayoutInflater;
 
-    public HotelAdapter(List<Hotel.HotelListBean> mDatas) {
+    public HotelAdapter(List<Hotel> mDatas) {
         this.mDatas = mDatas;
     }
 
@@ -51,16 +51,22 @@ public class HotelAdapter extends RecyclerView.Adapter<HotelViewHolder> {
 
     @Override
     public void onBindViewHolder(HotelViewHolder holder, int position) {
-        Hotel.HotelListBean model = mDatas.get(position);
+        Hotel model = mDatas.get(position);
 
         holder.price.setText(model.getPrice());
         holder.name.setText(model.getName());
-        holder.star.setRating(model.getStar());
+        holder.star.setRating(Float.parseFloat(model.getStar()));
         holder.starTv.setText(String.valueOf(model.getStar()));
+
+        String img=model.getImgs();
+        if(img.contains(";")) {
+            String[] imgarr = model.getImgs().split(";");
+            img = imgarr[0];
+        }
 
         Glide
                 .with(mContext)
-                .load(model.getImgList().get(0))
+                .load(img)
                 .placeholder(R.mipmap.pic_spot_default)
                 .into(holder.img);
 
@@ -85,7 +91,7 @@ public class HotelAdapter extends RecyclerView.Adapter<HotelViewHolder> {
      * @param position
      * @param newModel
      */
-    public void setItem(int position, Hotel.HotelListBean newModel) {
+    public void setItem(int position, Hotel newModel) {
         mDatas.set(position, newModel);
         notifyItemChanged(position);
     }
@@ -96,7 +102,7 @@ public class HotelAdapter extends RecyclerView.Adapter<HotelViewHolder> {
      * @param oldModel
      * @param newModel
      */
-    public void setItem(Hotel.HotelListBean oldModel, Hotel.HotelListBean newModel) {
+    public void setItem(Hotel oldModel, Hotel newModel) {
         setItem(mDatas.indexOf(oldModel), newModel);
     }
 }

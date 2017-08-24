@@ -115,7 +115,9 @@
         <activity android:name=".setting.TtsSettings" />
         <activity android:name=".map.MapActivity" />
         <activity android:name=".hotel.HotelActivity" />
-        <activity android:name=".hotel.HotelDetailActivity"></activity>
+        <activity android:name=".hotel.HotelDetailActivity" />
+        <activity android:name=".food.RestaurantActivity" />
+        <activity android:name=".food.RestaurantDetailActivity" />
     </application>
 
 </manifest>

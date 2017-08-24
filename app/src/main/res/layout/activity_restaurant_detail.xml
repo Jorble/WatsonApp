@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/shape_bg"
+    android:orientation="vertical">
+
+    <include layout="@layout/bar_title"/>
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:descendantFocusability="blocksDescendants">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@color/white"
+            android:descendantFocusability="blocksDescendants"
+            >
+
+            <!-- 相册 -->
+            <com.youth.banner.Banner
+                android:id="@+id/banner"
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+                app:image_scale_type="fit_xy"/>
+
+            <!-- 评分 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:gravity="center_vertical">
+                <me.zhanghai.android.materialratingbar.MaterialRatingBar
+                    android:id="@+id/star_mrb"
+                    style="@style/Widget.MaterialRatingBar.RatingBar.Indicator.Small"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:stepSize="0.01"
+                    app:mrb_progressTint="@color/theme_color"
+                    app:mrb_secondaryProgressTint="@color/theme_color" />
+                <TextView
+                    android:id="@+id/star_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="3dp"
+                    android:textColor="@color/theme_color"
+                    android:textSize="@dimen/text_size3"
+                    android:text="4.38"/>
+            </LinearLayout>
+
+            <include layout="@layout/divider_h"/>
+
+            <!-- 位置 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp">
+                <TextView
+                    android:id="@+id/location_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/text_size2"
+                    android:textColor="@color/text_black1"
+                    android:text="三亚湾路168号（近海虹路）"/>
+            </LinearLayout>
+
+            <include layout="@layout/divider_h"/>
+
+            <!-- 房间 -->
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:clipToPadding="false"
+                />
+
+        </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
+
+</LinearLayout>

@@ -1,7 +1,13 @@
 package com.giant.watsonapp.models;
 
-import java.io.Serializable;
+import com.giant.watsonapp.utils.JdbcHelper;
+import com.giant.watsonapp.utils.L;
+
+import net.qiujuer.genius.kit.handler.Run;
+
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -10,25 +16,80 @@ import java.util.List;
 
 public class RestaurantDao {
 
+    private static final String QUERY_ALL = "SELECT * FROM restaurant";
+
+    private static final String FIELD_ID = "id";
+    private static final String FIELD_NAME = "name";
+    private static final String FIELD_PRICE = "price";
+    private static final String FIELD_STAR = "star";
+    private static final String FIELD_LOCATION = "location";
+    private static final String FIELD_IMGS = "imgs";
+
     /**
      * 获取所有数据
+     *
      * @return
      */
-    public static List<Restaurant> queryAll(){
+    public static void queryAll(DbCallBack cdf) {
+        setCallBackFunction(cdf);
+
         List<Restaurant> mDatas = new ArrayList<>();
-        for(int i=0;i<10;i++){
-            Restaurant bean=new Restaurant();
-            bean.setId("00"+i);
-            bean.setName("海角轩");
-            bean.setPrice("¥715");
-            bean.setStar("4.4");
-            bean.setLocation("三亚市大东海旅游区榆海路12号（近大东海）");
-            bean.setImgs("https://dimg02.c-ctrip.com/images/100q0f0000007ghq83E85_D_750_500_Q80.jpg"+";"
-                    +"https://dimg05.c-ctrip.com/images/100q0f0000007ghq92E66_D_750_500_Q80.jpg"+";"
-                    +"https://dimg09.c-ctrip.com/images/100u0f0000007gim1E5D7_D_750_500_Q80.jpg");
-            mDatas.add(bean);
+
+        if (cbFunction != null) {
+            Thread th = new Thread(() -> {
+                try {
+                    List list = JdbcHelper.query(QUERY_ALL);
+                    if (list == null) return;
+                    for (Object o : list) {
+                        //map转对象
+                        HashMap hashMap = (HashMap) o;
+
+                        Restaurant bean = new Restaurant();
+                        bean.setId(hashMap.get(FIELD_ID).toString());
+                        bean.setName(hashMap.get(FIELD_NAME).toString());
+                        bean.setPrice(hashMap.get(FIELD_PRICE).toString());
+                        bean.setStar(hashMap.get(FIELD_STAR).toString());
+                        bean.setLocation(hashMap.get(FIELD_LOCATION).toString());
+                        bean.setImgs(hashMap.get(FIELD_IMGS).toString());
+                        mDatas.add(bean);
+                    }
+                    // 异步进入主线程,无需等待
+                    Run.onUiAsync(()->{
+                        cbFunction.onSuccess(mDatas);
+                    });
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                    L.i("连接不上数据库");
+                    // 异步进入主线程,无需等待
+                    Run.onUiAsync(()-> {
+                        cbFunction.onFailed(e);
+                    });
+                }
+            });
+            th.start();
         }
-        return mDatas;
+    }
+
+    private static DbCallBack cbFunction;
+
+    /**
+     * 回调函数接口
+     *
+     * @author Administrator
+     */
+    public static interface DbCallBack {
+        void onSuccess(List<Restaurant> datas);
+
+        void onFailed(Exception e);
+    }
+
+    /**
+     * 设置回调函数
+     *
+     * @param cbFun
+     */
+    public static void setCallBackFunction(DbCallBack cbFun) {
+        cbFunction = cbFun;
     }
 
 }

@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.giant.watsonapp.R;
 import com.giant.watsonapp.models.Restaurant;
 import com.giant.watsonapp.models.RestaurantDao;
+import com.giant.watsonapp.utils.T;
 import com.jaeger.library.StatusBarUtil;
 
 import java.util.ArrayList;
@@ -56,7 +57,19 @@ public class RestaurantActivity extends AppCompatActivity {
      * 初始化数据
      */
     private void initData(){
-        mDatas=RestaurantDao.queryAll();
+        RestaurantDao.queryAll(new RestaurantDao.DbCallBack() {
+            @Override
+            public void onSuccess(List<Restaurant> datas) {
+                mDatas=datas;
+                adapter = new RestaurantAdapter(mDatas);
+                recyclerView.setAdapter(adapter);
+            }
+
+            @Override
+            public void onFailed(Exception e) {
+                T.showShort(context,"连接失败");
+            }
+        });
     }
 
     /**
@@ -65,8 +78,6 @@ public class RestaurantActivity extends AppCompatActivity {
     private void initRv(){
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         recyclerView.setHasFixedSize(true);
-        adapter = new RestaurantAdapter(mDatas);
-        recyclerView.setAdapter(adapter);
     }
 
     @OnClick({R.id.back_iv, R.id.title_tv})

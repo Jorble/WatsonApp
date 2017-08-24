@@ -13,8 +13,10 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.giant.watsonapp.R;
+import com.giant.watsonapp.models.Food;
 import com.giant.watsonapp.models.FoodDao;
 import com.giant.watsonapp.models.Restaurant;
+import com.giant.watsonapp.utils.T;
 import com.giant.watsonapp.views.Divider;
 import com.jaeger.library.StatusBarUtil;
 import com.youth.banner.Banner;
@@ -164,8 +166,18 @@ public class RestaurantDetailActivity extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
         recyclerView.setNestedScrollingEnabled(false);
 
-        adapter = new FoodAdapter(FoodDao.queryByRestId(model.getId()));
-        recyclerView.setAdapter(adapter);
+        FoodDao.queryByRestId(model.getId(), new FoodDao.DbCallBack() {
+            @Override
+            public void onSuccess(List<Food> datas) {
+                adapter = new FoodAdapter(datas);
+                recyclerView.setAdapter(adapter);
+            }
+
+            @Override
+            public void onFailed(Exception e) {
+                T.showShort(context,"连接失败");
+            }
+        });
     }
 
     @OnClick({R.id.back_iv, R.id.title_tv, R.id.location_tv})

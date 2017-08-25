@@ -107,6 +107,7 @@ dependencies {
     compile 'org.greenrobot:eventbus:3.0.0'
     compile 'com.android.support:multidex:1.0.1'
     compile 'me.zhanghai.android.materialratingbar:library:1.0.2'
+    compile 'com.race604.waveloading:library:1.1.1'
     // ping/telnet/tracert/dns and run cmd
     compile 'net.qiujuer.genius:kit-cmd:2.0.0'
     // shuttle between ui-thread and child-thread

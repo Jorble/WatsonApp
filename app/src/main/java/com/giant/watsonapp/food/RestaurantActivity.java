@@ -15,7 +15,7 @@ import com.giant.watsonapp.R;
 import com.giant.watsonapp.models.Restaurant;
 import com.giant.watsonapp.models.RestaurantDao;
 import com.jaeger.library.StatusBarUtil;
-import com.zhy.autolayout.AutoRelativeLayout;
+import com.race604.drawable.wave.WaveDrawable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,14 +36,18 @@ public class RestaurantActivity extends AppCompatActivity {
     RecyclerView recyclerView;
 
     Context context;
+    @BindView(R.id.loadView)
+    ImageView loadView;
+    @BindView(R.id.loading_rl)
+    RelativeLayout loadingRl;
     @BindView(R.id.empty_iv)
     ImageView emptyIv;
     @BindView(R.id.empty_rl)
-    AutoRelativeLayout emptyRl;
+    RelativeLayout emptyRl;
     @BindView(R.id.error_iv)
     ImageView errorIv;
     @BindView(R.id.error_rl)
-    AutoRelativeLayout errorRl;
+    RelativeLayout errorRl;
 
     private List<Restaurant> mDatas = new ArrayList<>();
     private RestaurantAdapter adapter;
@@ -66,18 +70,20 @@ public class RestaurantActivity extends AppCompatActivity {
      * 初始化数据
      */
     private void beginRefreshing() {
-        showContent();
+        showLoading();
         new Handler().postDelayed(() -> {
             RestaurantDao.queryAll(new RestaurantDao.DbCallBack() {
                 @Override
                 public void onSuccess(List<Restaurant> datas) {
-                    if(recyclerView == null) return;
+                    if (recyclerView == null) return;
+                    showContent();
+
                     mDatas = datas;
 
-                    if(mDatas==null || mDatas.size()==0){
+                    if (mDatas == null || mDatas.size() == 0) {
                         //空数据
                         showEmpty();
-                    }else {
+                    } else {
                         adapter = new RestaurantAdapter(mDatas);
                         recyclerView.setAdapter(adapter);
                     }
@@ -85,13 +91,13 @@ public class RestaurantActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailed(Exception e) {
-                    if(recyclerView == null) return;
-                    if(mDatas.size()==0) {
+                    if (recyclerView == null) return;
+                    if (mDatas.size() == 0) {
                         showError();
                     }
                 }
             });
-        }, 500);
+        }, 1000);
     }
 
     /**
@@ -102,7 +108,7 @@ public class RestaurantActivity extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
     }
 
-    @OnClick({R.id.back_iv, R.id.title_tv,R.id.empty_rl, R.id.error_rl})
+    @OnClick({R.id.back_iv, R.id.title_tv, R.id.empty_rl, R.id.error_rl})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.back_iv:
@@ -117,6 +123,24 @@ public class RestaurantActivity extends AppCompatActivity {
                 beginRefreshing();
                 break;
         }
+    }
+
+    /**
+     * 显示加载
+     */
+    private void showLoading() {
+        emptyRl.setVisibility(View.GONE);
+        errorRl.setVisibility(View.GONE);
+        recyclerView.setVisibility(View.GONE);
+        loadingRl.setVisibility(View.VISIBLE);
+
+        WaveDrawable mWaveDrawable = new WaveDrawable(this, R.mipmap.pic_loading);
+        mWaveDrawable.setWaveAmplitude(5);//振幅,max=100
+        mWaveDrawable.setWaveLength(100);//波长,max=600
+        mWaveDrawable.setWaveSpeed(5);//速度,max=50
+//        mWaveDrawable.setLevel(4000);//进度,max=10000
+        mWaveDrawable.setIndeterminate(true);//是否自增
+        loadView.setImageDrawable(mWaveDrawable);
     }
 
     /**

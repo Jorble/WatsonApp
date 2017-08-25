@@ -255,6 +255,7 @@ public class HotelDetailActivity extends AppCompatActivity {
         emptyRl.setVisibility(View.GONE);
         errorRl.setVisibility(View.GONE);
         recyclerView.setVisibility(View.VISIBLE);
+        loadingRl.setVisibility(View.GONE);
     }
 
     /**
@@ -264,6 +265,7 @@ public class HotelDetailActivity extends AppCompatActivity {
         emptyRl.setVisibility(View.VISIBLE);
         errorRl.setVisibility(View.GONE);
         recyclerView.setVisibility(View.GONE);
+        loadingRl.setVisibility(View.GONE);
     }
 
     /**
@@ -273,6 +275,7 @@ public class HotelDetailActivity extends AppCompatActivity {
         emptyRl.setVisibility(View.GONE);
         errorRl.setVisibility(View.VISIBLE);
         recyclerView.setVisibility(View.GONE);
+        loadingRl.setVisibility(View.GONE);
     }
 
     @Override

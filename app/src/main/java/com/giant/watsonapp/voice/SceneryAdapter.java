@@ -9,45 +9,37 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.giant.watsonapp.Const;
 import com.giant.watsonapp.R;
-import com.giant.watsonapp.chat.ChatActivity;
 import com.giant.watsonapp.models.OrderStatus;
 import com.giant.watsonapp.models.Orientation;
-import com.giant.watsonapp.models.TimeLineModel;
-import com.giant.watsonapp.utils.DateTimeUtils;
+import com.giant.watsonapp.models.Scenery;
 import com.giant.watsonapp.utils.L;
 import com.giant.watsonapp.utils.T;
-import com.giant.watsonapp.utils.UiUtils;
 import com.giant.watsonapp.utils.VectorDrawableUtils;
 import com.giant.watsonapp.web.WebActivity;
 import com.github.vipulasri.timelineview.TimelineView;
-import com.iflytek.cloud.thirdparty.M;
 
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.List;
 
-import jp.wasabeef.glide.transformations.BlurTransformation;
 import jp.wasabeef.glide.transformations.CropCircleTransformation;
-
-import static android.R.id.message;
 
 /**
  * Created by HP-HP on 05-12-2015.
  */
-public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineViewHolder> {
+public class SceneryAdapter extends RecyclerView.Adapter<SceneryViewHolder> {
 
-    private List<TimeLineModel> mDatas;
+    private List<Scenery> mDatas;
     private Context mContext;
     private Orientation mOrientation;
     private boolean mWithLinePadding;
     private LayoutInflater mLayoutInflater;
 
-    public TimeLineAdapter(List<TimeLineModel> feedList, Orientation orientation, boolean withLinePadding) {
+    public SceneryAdapter(List<Scenery> feedList, Orientation orientation, boolean withLinePadding) {
         mDatas = feedList;
         mOrientation = orientation;
         mWithLinePadding = withLinePadding;
@@ -59,7 +51,7 @@ public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineViewHolder> {
     }
 
     @Override
-    public TimeLineViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public SceneryViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         mContext = parent.getContext();
         mLayoutInflater = LayoutInflater.from(mContext);
         View view;
@@ -67,16 +59,16 @@ public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineViewHolder> {
         if(mOrientation == Orientation.HORIZONTAL) {
             view = mLayoutInflater.inflate(mWithLinePadding ? R.layout.item_timeline_horizontal_line_padding : R.layout.item_timeline_horizontal, parent, false);
         } else {
-            view = mLayoutInflater.inflate(mWithLinePadding ? R.layout.item_timeline_line_padding : R.layout.item_timeline, parent, false);
+            view = mLayoutInflater.inflate(mWithLinePadding ? R.layout.item_timeline_line_padding : R.layout.item_scenery, parent, false);
         }
 
-        return new TimeLineViewHolder(view, viewType);
+        return new SceneryViewHolder(view, viewType);
     }
 
     @Override
-    public void onBindViewHolder(TimeLineViewHolder holder, int position) {
+    public void onBindViewHolder(SceneryViewHolder holder, int position) {
 
-        TimeLineModel timeLineModel = mDatas.get(position);
+        Scenery timeLineModel = mDatas.get(position);
 
         if(timeLineModel.getStatus() == OrderStatus.INACTIVE) {
             holder.mTimelineView.setMarker(VectorDrawableUtils.getDrawable(mContext, R.drawable.ic_marker_inactive, R.color.theme_color));
@@ -161,7 +153,7 @@ public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineViewHolder> {
      * @param position
      * @param newModel
      */
-    public void setItem(int position, TimeLineModel newModel) {
+    public void setItem(int position, Scenery newModel) {
         mDatas.set(position, newModel);
         notifyItemChanged(position);
     }
@@ -172,7 +164,7 @@ public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineViewHolder> {
      * @param oldModel
      * @param newModel
      */
-    public void setItem(TimeLineModel oldModel, TimeLineModel newModel) {
+    public void setItem(Scenery oldModel, Scenery newModel) {
         setItem(mDatas.indexOf(oldModel), newModel);
     }
 }

@@ -195,73 +195,73 @@ public class MapActivity extends AppCompatActivity implements SensorEventListene
     public void initOverlay() {
         // add marker overlay
         MarkerOptions oo = new MarkerOptions()
+                .title("亚龙湾热带天堂森林公园")
                 .position(new LatLng(18.25797, 109.659829))
                 .icon(bd)
-                .title("亚龙湾热带天堂森林公园");
-        oo.animateType(MarkerOptions.MarkerAnimateType.grow);
+                .animateType(MarkerOptions.MarkerAnimateType.grow);
         markerList.add((Marker) (mBaiduMap.addOverlay(oo)));
 
         MarkerOptions oo2 = new MarkerOptions()
+                .title("亚龙湾")
                 .position(new LatLng(18.236155, 109.654556))
                 .icon(bd)
-                .title("亚龙湾");
-        oo2.animateType(MarkerOptions.MarkerAnimateType.grow);
+                .animateType(MarkerOptions.MarkerAnimateType.grow);
         markerList.add((Marker) (mBaiduMap.addOverlay(oo2)));
 
         MarkerOptions oo3 = new MarkerOptions()
+                .title("南山文化旅游区")
                 .position(new LatLng(18.310497, 109.21997))
                 .icon(bd)
-                .title("南山文化旅游区");
-        oo3.animateType(MarkerOptions.MarkerAnimateType.grow);
+                .animateType(MarkerOptions.MarkerAnimateType.grow);
         markerList.add((Marker) (mBaiduMap.addOverlay(oo3)));
 
         MarkerOptions oo4 = new MarkerOptions()
+                .title("天涯海角")
                 .position(new LatLng(18.300306, 109.357845))
                 .icon(bd)
-                .title("天涯海角");
-        oo4.animateType(MarkerOptions.MarkerAnimateType.grow);
+                .animateType(MarkerOptions.MarkerAnimateType.grow);
         markerList.add((Marker) (mBaiduMap.addOverlay(oo4)));
 
         MarkerOptions oo5 = new MarkerOptions()
+                .title("椰梦长廊")
                 .position(new LatLng(18.276361, 109.488119))
                 .icon(bd)
-                .title("椰梦长廊");
-        oo5.animateType(MarkerOptions.MarkerAnimateType.grow);
+                .animateType(MarkerOptions.MarkerAnimateType.grow);
         markerList.add((Marker) (mBaiduMap.addOverlay(oo5)));
 
         MarkerOptions oo6 = new MarkerOptions()
+                .title("蜈支洲岛")
                 .position(new LatLng(18.320088, 109.770888))
                 .icon(bd)
-                .title("蜈支洲岛");
-        oo6.animateType(MarkerOptions.MarkerAnimateType.grow);
+                .animateType(MarkerOptions.MarkerAnimateType.grow);
         markerList.add((Marker) (mBaiduMap.addOverlay(oo6)));
 
         MarkerOptions oo7 = new MarkerOptions()
+                .title("第一市场")
                 .position(new LatLng(18.244147, 109.515652))
                 .icon(bd)
-                .title("第一市场");
-        oo7.animateType(MarkerOptions.MarkerAnimateType.grow);
+                .animateType(MarkerOptions.MarkerAnimateType.grow);
         markerList.add((Marker) (mBaiduMap.addOverlay(oo7)));
 
         MarkerOptions oo8 = new MarkerOptions()
+                .title("珠江南田温泉")
                 .position(new LatLng(18.414564, 109.735525))
                 .icon(bd)
-                .title("珠江南田温泉");
-        oo8.animateType(MarkerOptions.MarkerAnimateType.grow);
+                .animateType(MarkerOptions.MarkerAnimateType.grow);
         markerList.add((Marker) (mBaiduMap.addOverlay(oo8)));
 
         MarkerOptions oo9 = new MarkerOptions()
+                .title("大东海")
                 .position(new LatLng(18.228685, 109.530103))
                 .icon(bd)
-                .title("大东海");
-        oo9.animateType(MarkerOptions.MarkerAnimateType.grow);
+                .animateType(MarkerOptions.MarkerAnimateType.grow);
         markerList.add((Marker) (mBaiduMap.addOverlay(oo9)));
 
         MarkerOptions oo10 = new MarkerOptions()
+                .title("三亚千古情景区")
                 .position(new LatLng(18.298032, 109.537426))
                 .icon(bd)
-                .title("三亚千古情景区");
-        oo10.animateType(MarkerOptions.MarkerAnimateType.grow);
+                .animateType(MarkerOptions.MarkerAnimateType.grow);
         markerList.add((Marker) (mBaiduMap.addOverlay(oo10)));
 
         //半透明

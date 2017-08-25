@@ -15,7 +15,7 @@ import butterknife.ButterKnife;
 /**
  * Created by HP-HP on 05-12-2015.
  */
-public class TimeLineViewHolder extends RecyclerView.ViewHolder {
+public class SceneryViewHolder extends RecyclerView.ViewHolder {
 
     @BindView(R.id.img_iv)
     ImageView img;
@@ -28,7 +28,7 @@ public class TimeLineViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.time_marker)
     TimelineView mTimelineView;
 
-    public TimeLineViewHolder(View itemView, int viewType) {
+    public SceneryViewHolder(View itemView, int viewType) {
         super(itemView);
 
         ButterKnife.bind(this, itemView);

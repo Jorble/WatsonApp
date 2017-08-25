@@ -4,36 +4,31 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.giant.watsonapp.MainActivity;
 import com.giant.watsonapp.R;
 import com.giant.watsonapp.models.OrderStatus;
 import com.giant.watsonapp.models.Orientation;
-import com.giant.watsonapp.models.TimeLineModel;
+import com.giant.watsonapp.models.Scenery;
+import com.giant.watsonapp.models.SceneryDao;
 import com.giant.watsonapp.setting.TtsSettings;
 import com.giant.watsonapp.utils.L;
-import com.giant.watsonapp.utils.T;
 import com.iflytek.cloud.ErrorCode;
 import com.iflytek.cloud.InitListener;
 import com.iflytek.cloud.SpeechConstant;
 import com.iflytek.cloud.SpeechError;
 import com.iflytek.cloud.SpeechSynthesizer;
 import com.iflytek.cloud.SynthesizerListener;
-import com.iflytek.cloud.thirdparty.M;
-import com.iflytek.sunflower.FlowerCollector;
 import com.jaeger.library.StatusBarUtil;
+import com.race604.drawable.wave.WaveDrawable;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -60,10 +55,22 @@ public class VoiceActivity extends AppCompatActivity {
     RelativeLayout titleContainer;
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
+    @BindView(R.id.loadView)
+    ImageView loadView;
+    @BindView(R.id.loading_rl)
+    RelativeLayout loadingRl;
+    @BindView(R.id.empty_iv)
+    ImageView emptyIv;
+    @BindView(R.id.empty_rl)
+    RelativeLayout emptyRl;
+    @BindView(R.id.error_iv)
+    ImageView errorIv;
+    @BindView(R.id.error_rl)
+    RelativeLayout errorRl;
 
-    private TimeLineAdapter mTimeLineAdapter;
+    private SceneryAdapter adapter;
     //数据源
-    private List<TimeLineModel> mDataList = new ArrayList<>();
+    private List<Scenery> mDatas = new ArrayList<>();
     //垂直或水平排列
     private Orientation mOrientation = Orientation.VERTICAL;
     //时间轴之间是否隔开
@@ -86,7 +93,7 @@ public class VoiceActivity extends AppCompatActivity {
     private SharedPreferences mSharedPreferences;
 
     //当前操作的model
-    TimeLineModel currentModel;
+    Scenery currentModel;
     //当前操作的model的位置
     int positon;
 
@@ -104,12 +111,12 @@ public class VoiceActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(getLinearLayoutManager());
         recyclerView.setHasFixedSize(true);
 
-        initRecyclerView();
-
         // 初始化合成对象
         mTts = SpeechSynthesizer.createSynthesizer(this, mTtsInitListener);
 
         mSharedPreferences = getSharedPreferences(TtsSettings.PREFER_NAME, MODE_PRIVATE);
+
+        beginRefreshing();
     }
 
     /**
@@ -177,7 +184,7 @@ public class VoiceActivity extends AppCompatActivity {
                 if (currentModel != null) {
                     currentModel.setStatus(OrderStatus.COMPLETED);
                     currentModel.setPlaying(false);
-                    mTimeLineAdapter.setItem(positon, currentModel);
+                    adapter.setItem(positon, currentModel);
                 }
             } else if (error != null) {
                 L.i(error.getPlainDescription(true));
@@ -209,118 +216,41 @@ public class VoiceActivity extends AppCompatActivity {
     }
 
     /**
-     * 初始化
-     */
-    private void initRecyclerView() {
-        setDataListItems();
-        mTimeLineAdapter = new TimeLineAdapter(mDataList, mOrientation, mWithLinePadding);
-        recyclerView.setAdapter(mTimeLineAdapter);
-    }
-
-    /**
      * 设置数据
      */
-    private void setDataListItems() {
-        TimeLineModel model = new TimeLineModel();
-        model.setTitle("亚龙湾热带天堂森林公园");
-        model.setUrl("https://baike.baidu.com/item/"+model.getTitle());
-        model.setImg("https://dimg06.c-ctrip.com/images/fd/tg/g1/M02/7D/34/CghzfFWwz_uAa1DFABwYw-O18Fg870_D_180_180.jpg");
-        model.setMessage("亚龙湾热带天堂森林公园是海南省第一座滨海山地生态观光兼生态度假型森林公园，整个环境呈现热带风格，树木繁多茂密，是很原始的热带自然风格。爬到最高峰，可以从上而下俯瞰亚龙湾。");
-        model.setPlaying(false);
-        model.setStatus(OrderStatus.INACTIVE);
-        mDataList.add(model);
+    private void beginRefreshing() {
+        showLoading();
+        new Handler().postDelayed(() -> {
+            SceneryDao.queryAll(new SceneryDao.DbCallBack() {
+                @Override
+                public void onSuccess(List<Scenery> datas) {
+                    if (recyclerView == null) return;
+                    showContent();
 
-        TimeLineModel model2 = new TimeLineModel();
-        model2.setTitle("亚龙湾");
-        model2.setUrl("https://baike.baidu.com/item/"+model2.getTitle());
-        model2.setImg("https://dimg01.c-ctrip.com/images/fd/tg/g1/M03/7D/32/CghzfFWwz9eAFdICABJIucYkXDg976_D_180_180.jpg");
-        model2.setMessage("亚龙湾沙质细腻，海水干净，椰树海风蓝天白云，景色非常优美，不论是看海景还是体验水上运动，都非常不错。");
-        model2.setPlaying(false);
-        model2.setStatus(OrderStatus.INACTIVE);
-        mDataList.add(model2);
+                    mDatas = datas;
+                    //全置未开始状态
+                    for(Scenery scenery:mDatas){
+                        scenery.setStatus(OrderStatus.INACTIVE);
+                    }
 
-        TimeLineModel model3 = new TimeLineModel();
-        model3.setTitle("南山文化旅游区");
-        model3.setUrl("https://baike.baidu.com/item/"+model3.getTitle());
-        model3.setImg("https://dimg02.c-ctrip.com/images/100g050000000fs9o223C_D_180_180.jpg");
-        model3.setMessage("南山文化旅游区是著名的佛教圣地，这里108米高的海上观音圣像是标志性景观，南山寺的素食也是非常有名。");
-        model3.setPlaying(false);
-        model3.setStatus(OrderStatus.INACTIVE);
-        mDataList.add(model3);
+                    if (mDatas == null || mDatas.size() == 0) {
+                        //空数据
+                        showEmpty();
+                    } else {
+                        adapter = new SceneryAdapter(mDatas, mOrientation, mWithLinePadding);
+                        recyclerView.setAdapter(adapter);
+                    }
+                }
 
-        TimeLineModel model4 = new TimeLineModel();
-        model4.setTitle("天涯海角");
-        model4.setUrl("https://baike.baidu.com/item/"+model4.getTitle());
-        model4.setImg("https://dimg03.c-ctrip.com/images/fd/tg/g1/M02/7A/7D/CghzfFWwra2AUWzeACOF4nciR4E872_D_180_180.jpg");
-        model4.setMessage("从古至今，都流传着许多关于天涯海角的浪漫故事，与“天涯”、“海角”、“南天一柱”等地标石刻合影留念，是许多游客来这里必做的事情。");
-        model4.setPlaying(false);
-        model4.setStatus(OrderStatus.INACTIVE);
-        mDataList.add(model4);
-
-        TimeLineModel model5 = new TimeLineModel();
-        model5.setTitle("椰梦长廊");
-        model5.setUrl("https://baike.baidu.com/item/"+model5.getTitle());
-        model5.setImg("https://dimg05.c-ctrip.com/images/fd/tg/g2/M03/8E/90/CghzgVWxFkKAdOeMACHAZkL2Ob0476_D_180_180.jpg");
-        model5.setMessage("椰梦长廊位于三亚湾的海岸线上，葱郁的椰林、洁白的沙滩、一望无际的大海，构成了这里的美景。慢悠悠地走着，或者租辆单车骑行，都无比惬意。");
-        model5.setPlaying(false);
-        model5.setStatus(OrderStatus.INACTIVE);
-        mDataList.add(model5);
-
-        TimeLineModel model6 = new TimeLineModel();
-        model6.setTitle("蜈支洲岛");
-        model6.setUrl("https://baike.baidu.com/item/"+model6.getTitle());
-        model6.setImg("https://dimg05.c-ctrip.com/images/fd/tg/g1/M0B/7F/99/CghzfFWw9WKAbGoyABJRTZ3Fifw127_D_180_180.jpg");
-        model6.setMessage("蜈支洲岛的海水清澈，能见度非常高，其中的观日岩是绝佳的观景点。岛上的娱乐设施也很齐全，项目种类丰富。");
-        model6.setPlaying(false);
-        model6.setStatus(OrderStatus.INACTIVE);
-        mDataList.add(model6);
-
-        TimeLineModel model7 = new TimeLineModel();
-        model7.setTitle("第一市场");
-        model7.setUrl("https://baike.baidu.com/item/"+model7.getTitle());
-        model7.setImg("https://dimg08.c-ctrip.com/images/fd/tg/g1/M07/7A/DC/CghzfVWwuHeACFZQABD-1Z8NBvI018_D_180_180.jpg");
-        model7.setMessage("第一市场是许多游客吃海鲜的首选之地，这里的海鲜新鲜又便宜，在集贸市场里买了海鲜之后就近找加工店加工，比去大饭店吃要便宜很多。");
-        model7.setPlaying(false);
-        model7.setStatus(OrderStatus.INACTIVE);
-        mDataList.add(model7);
-
-        TimeLineModel model8 = new TimeLineModel();
-        model8.setTitle("珠江南田温泉");
-        model8.setUrl("https://baike.baidu.com/item/"+model8.getTitle());
-        model8.setImg("https://dimg03.c-ctrip.com/images/tg/643/495/089/70fcb8ca31ad4e50b02f658da12aed07_D_180_180.jpg");
-        model8.setMessage("珠江南田温泉是三亚知名度非常高的温泉区，汤池的种类丰富，环境也很有特色，给人一种在热带雨林中泡温泉的感觉。");
-        model8.setPlaying(false);
-        model8.setStatus(OrderStatus.INACTIVE);
-        mDataList.add(model8);
-
-        TimeLineModel model9 = new TimeLineModel();
-        model9.setTitle("大东海");
-        model9.setUrl("https://baike.baidu.com/item/"+model9.getTitle());
-        model9.setImg("https://dimg03.c-ctrip.com/images/fd/tg/g3/M08/0B/4B/CggYGVXAOoOAU3K1ACd6fZ_ann4456_D_180_180.jpg");
-        model9.setMessage("大东海是一片三面环山的月牙形海湾，这里水清沙软，也比较适合游泳和潜水。大东海一带有许多价格实惠的海景公寓，很适合来此小住些日子。");
-        model9.setPlaying(false);
-        model9.setStatus(OrderStatus.INACTIVE);
-        mDataList.add(model9);
-
-        TimeLineModel model10 = new TimeLineModel();
-        model10.setTitle("三亚千古情景区");
-        model10.setUrl("https://baike.baidu.com/item/"+model10.getTitle());
-        model10.setImg("https://dimg09.c-ctrip.com/images/100a0700000020xmg4C78_D_180_180.jpg");
-        model10.setMessage("三亚千古情景区内有许多有意思的小表演，但最值得一看的是大型歌舞秀《三亚千古情》，每一个场景都编排得十分震撼。");
-        model10.setPlaying(false);
-        model10.setStatus(OrderStatus.INACTIVE);
-        mDataList.add(model10);
-    }
-
-    @OnClick({R.id.back_iv, R.id.title_tv})
-    public void onViewClicked(View view) {
-        switch (view.getId()) {
-            case R.id.back_iv:
-                finish();
-                break;
-            case R.id.title_tv:
-                break;
-        }
+                @Override
+                public void onFailed(Exception e) {
+                    if (recyclerView == null) return;
+                    if (mDatas.size() == 0) {
+                        showError();
+                    }
+                }
+            });
+        }, 1000);
     }
 
     /**
@@ -402,7 +332,7 @@ public class VoiceActivity extends AppCompatActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(Message message) {
         if (message.obj == null) return;
-        currentModel = (TimeLineModel) message.obj;
+        currentModel = (Scenery) message.obj;
         positon = message.arg1;
 
         switch (message.what) {
@@ -446,5 +376,70 @@ public class VoiceActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
+    }
+
+    @OnClick({R.id.back_iv, R.id.title_tv, R.id.empty_rl, R.id.error_rl})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.back_iv:
+                finish();
+                break;
+            case R.id.title_tv:
+                break;
+            case R.id.empty_rl:
+                beginRefreshing();
+                break;
+            case R.id.error_rl:
+                beginRefreshing();
+                break;
+        }
+    }
+
+    /**
+     * 显示加载
+     */
+    private void showLoading() {
+        emptyRl.setVisibility(View.GONE);
+        errorRl.setVisibility(View.GONE);
+        recyclerView.setVisibility(View.GONE);
+        loadingRl.setVisibility(View.VISIBLE);
+
+        WaveDrawable mWaveDrawable = new WaveDrawable(this, R.mipmap.pic_loading);
+        mWaveDrawable.setWaveAmplitude(5);//振幅,max=100
+        mWaveDrawable.setWaveLength(100);//波长,max=600
+        mWaveDrawable.setWaveSpeed(5);//速度,max=50
+//        mWaveDrawable.setLevel(4000);//进度,max=10000
+        mWaveDrawable.setIndeterminate(true);//是否自增
+        loadView.setImageDrawable(mWaveDrawable);
+    }
+
+    /**
+     * 显示内容
+     */
+    private void showContent() {
+        emptyRl.setVisibility(View.GONE);
+        errorRl.setVisibility(View.GONE);
+        recyclerView.setVisibility(View.VISIBLE);
+        loadingRl.setVisibility(View.GONE);
+    }
+
+    /**
+     * 显示空布局
+     */
+    private void showEmpty() {
+        emptyRl.setVisibility(View.VISIBLE);
+        errorRl.setVisibility(View.GONE);
+        recyclerView.setVisibility(View.GONE);
+        loadingRl.setVisibility(View.GONE);
+    }
+
+    /**
+     * 显示错误布局
+     */
+    private void showError() {
+        emptyRl.setVisibility(View.GONE);
+        errorRl.setVisibility(View.VISIBLE);
+        recyclerView.setVisibility(View.GONE);
+        loadingRl.setVisibility(View.GONE);
     }
 }

@@ -7,9 +7,9 @@ package com.giant.watsonapp.models;
 public class Introduction {
     private String id;
     private String section;
-    private String texts;
-    private String imgs;
-    private String imgNames;
+    private String text;
+    private String img;
+    private String imgName;
 
     public String getId() {
         return id;
@@ -27,27 +27,27 @@ public class Introduction {
         this.section = section;
     }
 
-    public String getTexts() {
-        return texts;
+    public String getText() {
+        return text;
     }
 
-    public void setTexts(String texts) {
-        this.texts = texts;
+    public void setText(String text) {
+        this.text = text;
     }
 
-    public String getImgs() {
-        return imgs;
+    public String getImg() {
+        return img;
     }
 
-    public void setImgs(String imgs) {
-        this.imgs = imgs;
+    public void setImg(String img) {
+        this.img = img;
     }
 
-    public String getImgNames() {
-        return imgNames;
+    public String getImgName() {
+        return imgName;
     }
 
-    public void setImgNames(String imgNames) {
-        this.imgNames = imgNames;
+    public void setImgName(String imgName) {
+        this.imgName = imgName;
     }
 }

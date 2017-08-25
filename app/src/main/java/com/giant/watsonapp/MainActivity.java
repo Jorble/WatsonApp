@@ -14,6 +14,7 @@ import com.bumptech.glide.Glide;
 import com.giant.watsonapp.chat.ChatActivity;
 import com.giant.watsonapp.food.RestaurantActivity;
 import com.giant.watsonapp.hotel.HotelActivity;
+import com.giant.watsonapp.introduction.IntroductionActivity;
 import com.giant.watsonapp.map.MapActivity;
 import com.giant.watsonapp.setting.SettingActivity;
 import com.giant.watsonapp.utils.DoubleClickExitHelper;
@@ -57,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.banner)
     Banner banner;
 
-    private int countTitleClick=0;//点击标题3下进入设置页面
+    private int countTitleClick = 0;//点击标题3下进入设置页面
     DoubleClickExitHelper mDoubleClickExitHelper;
 
     @Override
@@ -87,13 +88,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @OnClick({R.id.menu_basic, R.id.menu_traffic, R.id.menu_hotel, R.id.menu_food
-            , R.id.menu_specialty, R.id.menu_robot,R.id.spot_title})
+            , R.id.menu_specialty, R.id.menu_robot, R.id.spot_title})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.menu_basic:
+                UiUtils.startActivity(this, IntroductionActivity.class);
                 break;
             case R.id.menu_traffic:
-               UiUtils.startActivity(this, MapActivity.class);
+                UiUtils.startActivity(this, MapActivity.class);
                 break;
             case R.id.menu_hotel:
                 UiUtils.startActivity(this, HotelActivity.class);
@@ -109,8 +111,8 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case R.id.spot_title:
                 countTitleClick++;
-                if(countTitleClick>=3){
-                    countTitleClick=0;
+                if (countTitleClick >= 3) {
+                    countTitleClick = 0;
                     UiUtils.startActivity(this, SettingActivity.class);
                 }
                 break;
@@ -120,9 +122,9 @@ public class MainActivity extends AppCompatActivity {
     /**
      * 初始化轮播
      */
-    private void initBanner(){
+    private void initBanner() {
         //本地图片数据（资源文件）
-        List<Integer> images=new ArrayList<>();
+        List<Integer> images = new ArrayList<>();
         images.add(R.mipmap.home_banner1);
         images.add(R.mipmap.home_banner2);
         images.add(R.mipmap.home_banner3);
@@ -165,7 +167,7 @@ public class MainActivity extends AppCompatActivity {
             Glide
                     .with(context)
                     .load(path)
-                    .transform(new GlideRoundTransform(context,10))//圆角10dp
+                    .transform(new GlideRoundTransform(context, 10))//圆角10dp
                     .into(imageView);
 
         }
@@ -174,11 +176,9 @@ public class MainActivity extends AppCompatActivity {
     /**
      * 监听返回--是否退出程序
      */
-    public boolean onKeyDown(int keyCode, KeyEvent event)
-    {
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
         boolean flag = true;
-        if (keyCode == KeyEvent.KEYCODE_BACK)
-        {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
             // 是否退出应用
             return mDoubleClickExitHelper.onKeyDown(keyCode, event);
         }

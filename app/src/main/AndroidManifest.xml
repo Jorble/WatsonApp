@@ -119,6 +119,7 @@
         <activity android:name=".food.RestaurantActivity" />
         <activity android:name=".food.RestaurantDetailActivity" />
         <activity android:name=".introduction.IntroductionActivity" />
+        <activity android:name=".chat.DetailActivity"></activity>
     </application>
 
 </manifest>

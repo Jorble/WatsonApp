@@ -5,26 +5,32 @@ import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Unique;
 import org.greenrobot.greendao.annotation.Generated;
 
+import java.io.Serializable;
+
 /**
  * Created by Jorble on 2017/7/25.
  */
 
 @Entity
-public class Conversation {
+public class Conversation implements Serializable{
+
+    private static final long serialVersionUID = 6686007220640656611L;
     @Unique
     private String id;
     private String content;
     private String detail;
     private String img;
     private String url;
-    @Generated(hash = 376114013)
+    private String name;
+    @Generated(hash = 972320247)
     public Conversation(String id, String content, String detail, String img,
-            String url) {
+            String url, String name) {
         this.id = id;
         this.content = content;
         this.detail = detail;
         this.img = img;
         this.url = url;
+        this.name = name;
     }
     @Generated(hash = 1893991898)
     public Conversation() {
@@ -59,4 +65,12 @@ public class Conversation {
     public void setUrl(String url) {
         this.url = url;
     }
+    public String getName() {
+        return this.name;
+    }
+    public void setName(String name) {
+        this.name = name;
+    }
+
+
 }

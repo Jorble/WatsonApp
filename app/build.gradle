@@ -53,7 +53,7 @@ android {
 //greendao配置
 greendao {
     //版本号，升级时可配置（注意包名需要更改为自己的）
-    schemaVersion 5
+    schemaVersion 6
     daoPackage 'com.giant.watsonapp.models.db.gen'
     targetGenDir 'src/main/java'
 }
@@ -66,6 +66,9 @@ dependencies {
     compile files('libs/mysql-connector-java-5.0.8-bin.jar')
     compile files('libs/BaiduLBS_Android.jar')
     compile files('libs/httpmime-4.1.2.jar')
+    // ping/telnet/tracert/dns and run cmd
+    // shuttle between ui-thread and child-thread
+    // calss reflect
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support:design:25.3.1'
     compile 'com.android.support:recyclerview-v7:25.3.1'
@@ -108,11 +111,8 @@ dependencies {
     compile 'com.android.support:multidex:1.0.1'
     compile 'me.zhanghai.android.materialratingbar:library:1.0.2'
     compile 'com.race604.waveloading:library:1.1.1'
-    // ping/telnet/tracert/dns and run cmd
     compile 'net.qiujuer.genius:kit-cmd:2.0.0'
-    // shuttle between ui-thread and child-thread
     compile 'net.qiujuer.genius:kit-handler:2.0.0'
-    // calss reflect
     compile 'net.qiujuer.genius:kit-reflect:2.0.0'
     testCompile 'junit:junit:4.12'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.7.0'

@@ -16,7 +16,7 @@ public class MyMessage implements IMessage {
     private String mediaFilePath;
     private long duration;
     private String progress;
-    private String url;
+    private String convId;
 
     public MyMessage(String text, MessageType type) {
         this.text = text;
@@ -92,11 +92,11 @@ public class MyMessage implements IMessage {
         return mediaFilePath;
     }
 
-    public String getUrl() {
-        return url;
+    public String getConvId() {
+        return convId;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
+    public void setConvId(String convId) {
+        this.convId = convId;
     }
 }

@@ -13,9 +13,9 @@ public class Const {
     public static final String MYSQL_PWD_KEY="MYSQL_PWD_KEY";
     public static final String MYSQL_DRIVER_KEY="MYSQL_DRIVER_KEY";
 
-    public static final String MYSQL_URL_DEFAULT="jdbc:mysql://192.168.100.140:3306/watson_app";
+    public static final String MYSQL_URL_DEFAULT="jdbc:mysql://183.62.42.146:24406/watson_app";
     public static final String MYSQL_USER_DEFAULT="root";
-    public static final String MYSQL_PWD_DEFAULT="root";
+    public static final String MYSQL_PWD_DEFAULT="";
     public static final String MYSQL_DRIVER_DEFAULT="com.mysql.jdbc.Driver";
 
     public static final String MYSQL_QUERY_ALL="SELECT id, content, img, url FROM conversation";

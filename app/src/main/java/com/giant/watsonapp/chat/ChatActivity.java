@@ -27,6 +27,9 @@ import com.bumptech.glide.request.target.Target;
 import com.giant.watsonapp.App;
 import com.giant.watsonapp.Const;
 import com.giant.watsonapp.R;
+import com.giant.watsonapp.hotel.HotelDetailActivity;
+import com.giant.watsonapp.models.Conversation;
+import com.giant.watsonapp.models.ConversationDao;
 import com.giant.watsonapp.models.DefaultUser;
 import com.giant.watsonapp.models.MyMessage;
 import com.giant.watsonapp.photo.CustomHelper;
@@ -52,6 +55,7 @@ import com.ibm.watson.developer_cloud.visual_recognition.v3.VisualRecognition;
 import com.ibm.watson.developer_cloud.visual_recognition.v3.model.ImageClassification;
 import com.ibm.watson.developer_cloud.visual_recognition.v3.model.VisualClassification;
 import com.ibm.watson.developer_cloud.visual_recognition.v3.model.VisualClassifier;
+import com.iflytek.cloud.thirdparty.C;
 import com.jaeger.library.StatusBarUtil;
 import com.jph.takephoto.app.TakePhotoActivity;
 import com.jph.takephoto.model.TImage;
@@ -76,6 +80,8 @@ import cn.jiguang.imui.messages.MsgListAdapter;
 import pub.devrel.easypermissions.AppSettingsDialog;
 import pub.devrel.easypermissions.EasyPermissions;
 
+import static android.R.id.list;
+import static android.media.CamcorderProfile.get;
 import static com.giant.watsonapp.watson.WatsonServiceManager.getSttRecognizeOptions;
 import static com.giant.watsonapp.watson.WatsonServiceManager.getVisualRecognitionOptions;
 import static rx.schedulers.Schedulers.start;
@@ -232,7 +238,7 @@ public class ChatActivity extends TakePhotoActivity implements EasyPermissions.P
                                     }
                                 }
                             }
-                        },2000);
+                        }, 2000);
                         return true;
                     default:
                         break;
@@ -307,8 +313,8 @@ public class ChatActivity extends TakePhotoActivity implements EasyPermissions.P
             case ROLE_ROBOT:
                 message = new MyMessage(text, IMessage.MessageType.RECEIVE_TEXT);
                 message.setUserInfo(new DefaultUser(role, "robot", "R.mipmap.avatar_robot"));
-                //返回含有url
-                if (!TextUtils.isEmpty(url)) message.setUrl(url);
+                //返回含有convId
+                if (!TextUtils.isEmpty(url)) message.setConvId(url);
                 break;
             case ROLE_MYSELF:
                 message = new MyMessage(text, IMessage.MessageType.SEND_TEXT);
@@ -417,10 +423,26 @@ public class ChatActivity extends TakePhotoActivity implements EasyPermissions.P
                     PhotoViewPop photoViewPop = new PhotoViewPop((Activity) context, message.getMediaFilePath());
                     photoViewPop.showPopupWindow();
                 } else if (message.getType() == IMessage.MessageType.RECEIVE_TEXT
-                        && !TextUtils.isEmpty(message.getUrl())) {//文本跳转url
-                    Intent intent = new Intent(ChatActivity.this, WebActivity.class);
-                    intent.putExtra("url", message.getUrl());
-                    startActivity(intent);
+                        && !TextUtils.isEmpty(message.getConvId())) {//文本跳转到DetailActivity
+
+                    ConversationDao.queryById(message.getConvId(), new ConversationDao.DbCallBack() {
+                        @Override
+                        public void onSuccess(List<Conversation> datas) {
+                            if(datas!=null && datas.size()>0){
+                                Intent intent=new Intent();
+                                intent.setClass(context,DetailActivity.class);
+                                Bundle mBundle = new Bundle();
+                                mBundle.putSerializable("model",datas.get(0));
+                                intent.putExtras(mBundle);
+                                context.startActivity(intent);
+                            }
+                        }
+
+                        @Override
+                        public void onFailed(Exception e) {
+
+                        }
+                    });
                 }
             }
         });
@@ -485,7 +507,7 @@ public class ChatActivity extends TakePhotoActivity implements EasyPermissions.P
                     for (int i = 0; i < array.length; i++) {
                         if (array[i].contains("id=")) {//如果含有"id="的字符串，输出图文
                             String convId = array[i].substring(3);//"id=123",剪切掉"id="
-                            queryMysql(Const.MYSQL_FIELD_ID, convId);
+                            queryConvById(convId);
                         } else {//如果不含有"id="的字符串，直接输出文本
                             creatTextMessages(ROLE_ROBOT, array[i], null);
                         }
@@ -543,7 +565,7 @@ public class ChatActivity extends TakePhotoActivity implements EasyPermissions.P
 
                         final String convId = highScoreClass.getName();//分类名对应mysql类型
                         if (highScoreClass.getScore() > 0.5) {
-                            queryMysql(Const.MYSQL_FIELD_ID, convId);
+                            queryConvById(convId);
                         } else {
                             creatTextMessages(ROLE_ROBOT, "这图好眼熟啊，可是我不知道怎么解释", null);
                         }
@@ -563,69 +585,48 @@ public class ChatActivity extends TakePhotoActivity implements EasyPermissions.P
     /**
      * 查询数据库，并显示图文描述
      */
-    private void queryMysql(final String field, final String query) {
-        L.i("查询字段=" + field + " 查询值=" + query);
+    private void queryConvById(final String query) {
+        L.i("查询conversationId=" + query);
 
-        /**
-         * 本地sqlite数据库查询
-         */
-//                        //根据最高分的类名查出详情描述
-//                        List<Conversation> items = GreenDaoManager.getDaoInstant().getConversationDao().queryBuilder()
-//                                .where(ConversationDao.Properties.Type.eq(highScoreClass.getName()))
-//                                .orderAsc(ConversationDao.Properties.Id)
-//                                .list();
-
-        new Thread(new Runnable() {
+        ConversationDao.queryById(query, new ConversationDao.DbCallBack() {
             @Override
-            public void run() {
-                try {
-                    String sql = Const.MYSQL_QUERY_ALL;
-                    List list = JdbcHelper.query(sql);
-                    boolean isExist = false;
-                    for (int i = 0; i < list.size(); i++) {
-                        //map转conversation
-                        HashMap hashMap = (HashMap) list.get(i);
-
-                        if (query.equals(hashMap.get(field).toString()) && !isExist) {
-                            isExist = true;
-                            L.i(hashMap.toString());
-                            /**
-                             * conversation转message
-                             */
-                            //图片描述
-                            if (!TextUtils.isEmpty(hashMap.get(Const.MYSQL_FIELD_IMG).toString())) {
-                                creatPhotoMessages(ROLE_ROBOT, hashMap.get(Const.MYSQL_FIELD_IMG).toString());
-                            }
-                            //文本描述
-                            if (!TextUtils.isEmpty(hashMap.get(Const.MYSQL_FIELD_CONTENT).toString())) {
-                                if (!TextUtils.isEmpty(hashMap.get(Const.MYSQL_FIELD_URL).toString())) {
-                                    creatTextMessages(ROLE_ROBOT, hashMap.get(Const.MYSQL_FIELD_CONTENT).toString(), hashMap.get(Const.MYSQL_FIELD_URL).toString());
-                                } else {
-                                    creatTextMessages(ROLE_ROBOT, hashMap.get(Const.MYSQL_FIELD_CONTENT).toString(), null);
-                                }
-                            }
-
-                            break;//如果已找到id，直接跳出循环
+            public void onSuccess(List<Conversation> datas) {
+                if (datas != null && datas.size() > 0) {
+                    /**
+                     * conversation转message
+                     * 默认取第一个值
+                     */
+                    Conversation model = datas.get(0);
+                    //图片描述
+                    if (!TextUtils.isEmpty(model.getImg())) {
+                        creatPhotoMessages(ROLE_ROBOT, model.getImg());
+                    }
+                    //文本描述
+                    if (!TextUtils.isEmpty(model.getContent())) {
+                        if (!TextUtils.isEmpty(model.getDetail())) {
+                            creatTextMessages(ROLE_ROBOT, model.getContent(), model.getId());
+                        } else {
+                            creatTextMessages(ROLE_ROBOT, model.getContent(), null);
                         }
                     }
-
+                } else {
                     //如果查询不到相应对话，则显示未找到的值
-                    if (!isExist) {
-                        creatTextMessages(ROLE_ROBOT, query, null);
-                    }
-
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                    creatTextMessages(ROLE_ROBOT, "连不上数据库，我也不知该如何回答", null);
+                    creatTextMessages(ROLE_ROBOT, query, null);
                 }
             }
-        }).start();
+
+            @Override
+            public void onFailed(Exception e) {
+                e.printStackTrace();
+                creatTextMessages(ROLE_ROBOT, "连不上服务，我也不知该如何回答", null);
+            }
+        });
     }
 
     @OnClick({R.id.menu_input_text, R.id.menu_input_photo, R.id.back_iv
             , R.id.text_input_close, R.id.text_input_send, R.id.photo_input_takephoto
-            , R.id.photo_input_close, R.id.photo_input_gallery
-            })
+            , R.id.photo_input_close, R.id.photo_input_gallery, R.id.title_tv
+    })
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.menu_input_text:
@@ -652,6 +653,8 @@ public class ChatActivity extends TakePhotoActivity implements EasyPermissions.P
             case R.id.back_iv:
                 finish();
                 break;
+            case R.id.title_tv:
+                break;
         }
     }
 
@@ -664,7 +667,7 @@ public class ChatActivity extends TakePhotoActivity implements EasyPermissions.P
         photoInputLl.setVisibility(View.GONE);
         startShowAnim(textInputLl);
         mAdapter.getLayoutManager().scrollToPosition(0);
-        KeyBoardUtils.openKeyboard(this,textInputContent);
+        KeyBoardUtils.openKeyboard(this, textInputContent);
     }
 
     /**
@@ -707,10 +710,11 @@ public class ChatActivity extends TakePhotoActivity implements EasyPermissions.P
         //增加动画
         ViewAnimator
                 .animate(view)
-                .scale(1f,1.2f)
+                .scale(1f, 1.2f)
                 .interpolator(new AccelerateInterpolator())
                 .duration(300)
-                .onStart(() -> { })
+                .onStart(() -> {
+                })
                 .onStop(() -> audioInputRipple.startRipple())
                 .start();
     }
@@ -722,10 +726,11 @@ public class ChatActivity extends TakePhotoActivity implements EasyPermissions.P
         //增加动画
         ViewAnimator
                 .animate(view)
-                .scale(1.2f,1f)
+                .scale(1.2f, 1f)
                 .interpolator(new AccelerateInterpolator())
                 .duration(300)
-                .onStart(() -> { })
+                .onStart(() -> {
+                })
                 .onStop(() -> audioInputRipple.stopRipple())
                 .start();
     }

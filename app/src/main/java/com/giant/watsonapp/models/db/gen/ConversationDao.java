@@ -29,6 +29,7 @@ public class ConversationDao extends AbstractDao<Conversation, Void> {
         public final static Property Detail = new Property(2, String.class, "detail", false, "DETAIL");
         public final static Property Img = new Property(3, String.class, "img", false, "IMG");
         public final static Property Url = new Property(4, String.class, "url", false, "URL");
+        public final static Property Name = new Property(5, String.class, "name", false, "NAME");
     }
 
 
@@ -48,7 +49,8 @@ public class ConversationDao extends AbstractDao<Conversation, Void> {
                 "\"CONTENT\" TEXT," + // 1: content
                 "\"DETAIL\" TEXT," + // 2: detail
                 "\"IMG\" TEXT," + // 3: img
-                "\"URL\" TEXT);"); // 4: url
+                "\"URL\" TEXT," + // 4: url
+                "\"NAME\" TEXT);"); // 5: name
     }
 
     /** Drops the underlying database table. */
@@ -85,6 +87,11 @@ public class ConversationDao extends AbstractDao<Conversation, Void> {
         if (url != null) {
             stmt.bindString(5, url);
         }
+ 
+        String name = entity.getName();
+        if (name != null) {
+            stmt.bindString(6, name);
+        }
     }
 
     @Override
@@ -115,6 +122,11 @@ public class ConversationDao extends AbstractDao<Conversation, Void> {
         if (url != null) {
             stmt.bindString(5, url);
         }
+ 
+        String name = entity.getName();
+        if (name != null) {
+            stmt.bindString(6, name);
+        }
     }
 
     @Override
@@ -129,7 +141,8 @@ public class ConversationDao extends AbstractDao<Conversation, Void> {
             cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // content
             cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // detail
             cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // img
-            cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4) // url
+            cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // url
+            cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5) // name
         );
         return entity;
     }
@@ -141,6 +154,7 @@ public class ConversationDao extends AbstractDao<Conversation, Void> {
         entity.setDetail(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
         entity.setImg(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
         entity.setUrl(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
+        entity.setName(cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5));
      }
     
     @Override

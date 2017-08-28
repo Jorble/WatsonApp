@@ -14,9 +14,12 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.giant.watsonapp.R;
+import com.giant.watsonapp.map.MapActivity;
 import com.giant.watsonapp.models.Hotel;
+import com.giant.watsonapp.models.MyMarker;
 import com.giant.watsonapp.models.Room;
 import com.giant.watsonapp.models.RoomDao;
+import com.giant.watsonapp.utils.T;
 import com.giant.watsonapp.views.Divider;
 import com.jaeger.library.StatusBarUtil;
 import com.race604.drawable.wave.WaveDrawable;
@@ -33,6 +36,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import me.zhanghai.android.materialratingbar.MaterialRatingBar;
+
+import static com.giant.watsonapp.map.MapActivity.TYPE_HOTEL;
+import static com.giant.watsonapp.map.MapActivity.TYPE_SCENERY;
 
 public class HotelDetailActivity extends AppCompatActivity {
 
@@ -213,7 +219,7 @@ public class HotelDetailActivity extends AppCompatActivity {
         recyclerView.setNestedScrollingEnabled(false);
     }
 
-    @OnClick({R.id.back_iv, R.id.title_tv, R.id.empty_rl, R.id.error_rl})
+    @OnClick({R.id.back_iv, R.id.title_tv, R.id.empty_rl, R.id.error_rl, R.id.readMap_tv})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.back_iv:
@@ -227,7 +233,27 @@ public class HotelDetailActivity extends AppCompatActivity {
             case R.id.error_rl:
                 beginRefreshing();
                 break;
+            case R.id.readMap_tv:
+                readMap();
+                break;
         }
+    }
+
+    /**
+     * 查看地图
+     */
+    private void readMap(){
+        if(TextUtils.isEmpty(model.getLat()) || TextUtils.isEmpty(model.getLon())){
+            T.showShort(context,"暂无地图信息");
+            return;
+        }
+        MyMarker myMarker=new MyMarker();
+        myMarker.setType(TYPE_HOTEL);
+        myMarker.setImg(model.getImgs());
+        myMarker.setName(model.getName());
+        myMarker.setLat(model.getLat());
+        myMarker.setLon(model.getLon());
+        MapActivity.startMyself(context,myMarker);
     }
 
     /**

@@ -10,6 +10,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -107,7 +108,7 @@ public class MapActivity extends AppCompatActivity implements SensorEventListene
 
     //跳转的传入对象
     MyMarker myMarker;
-    List<MyMarker> sumList=new ArrayList<>();//汇总list
+    List<MyMarker> sumList = new ArrayList<>();//汇总list
 
     // 绘制覆盖物
     private List<MyMarker> sceneryList = new ArrayList<>();
@@ -116,11 +117,11 @@ public class MapActivity extends AppCompatActivity implements SensorEventListene
 
     private InfoWindow mInfoWindow;
 
-    
+
     //0-景点|1-美食|2-酒店
-    private static final int TYPE_SCENERY=0;
-    private static final int TYPE_FOOD=1;
-    private static final int TYPE_HOTEL=2;
+    public static final int TYPE_SCENERY = 0;
+    public static final int TYPE_FOOD = 1;
+    public static final int TYPE_HOTEL = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -148,7 +149,7 @@ public class MapActivity extends AppCompatActivity implements SensorEventListene
 
                 InfoWindow.OnInfoWindowClickListener listener = null;
 
-                for (MyMarker model:sumList) {
+                for (MyMarker model : sumList) {
                     if (marker.getTitle().equals(model.getName())) {
                         //设置标题
                         textView.setText(model.getName());
@@ -191,10 +192,6 @@ public class MapActivity extends AppCompatActivity implements SensorEventListene
         // 标识定位方向
         mBaiduMap.setMyLocationConfiguration(new MyLocationConfiguration(
                 mCurrentMode, true, mCurrentMarker));
-        //切到当前定位
-        MapStatus.Builder builder = new MapStatus.Builder();
-        builder.overlook(0);
-        mBaiduMap.animateMapStatus(MapStatusUpdateFactory.newMapStatus(builder.build()));
 
     }
 
@@ -246,7 +243,7 @@ public class MapActivity extends AppCompatActivity implements SensorEventListene
 
     }
 
-    @OnClick({R.id.back_iv, R.id.title_tv, R.id.showMyLoc_iv, R.id.showCurrentLoc_iv
+    @OnClick({R.id.back_iv, R.id.title_tv, R.id.showMyLoc_iv, R.id.showTargetLoc_iv
             , R.id.showSceneryLoc_iv, R.id.showFoodLoc_iv, R.id.showHotelLoc_iv
     })
     public void onViewClicked(View view) {
@@ -255,11 +252,10 @@ public class MapActivity extends AppCompatActivity implements SensorEventListene
                 finish();
                 break;
             case R.id.showMyLoc_iv:
-                switchView(mCurrentLat,mCurrentLon,17);
+                switchView(mCurrentLat, mCurrentLon, 17);
                 break;
-            case R.id.showCurrentLoc_iv:
-                showCurrent();
-                switchView(Double.parseDouble(myMarker.getLat()),Double.parseDouble(myMarker.getLon()),11);
+            case R.id.showTargetLoc_iv:
+                showTarget();
                 break;
             case R.id.showSceneryLoc_iv:
                 showScenery();
@@ -278,35 +274,65 @@ public class MapActivity extends AppCompatActivity implements SensorEventListene
     /**
      * 显示传入的地点
      */
-    private void showCurrent(){
+    private void showTarget() {
         mBaiduMap.clear();
-        if(myMarker!=null){
-            MarkerOptions oo = new MarkerOptions()
-                    .title(myMarker.getName())
-                    .position(new LatLng(Double.parseDouble(myMarker.getLat()), Double.parseDouble(myMarker.getLon())))
-                    .icon(getBd(myMarker.getType()))
-                    .alpha(0.8f)
-                    .animateType(MarkerOptions.MarkerAnimateType.grow);
-            mBaiduMap.addOverlay(oo);
-            sumList.add(myMarker);
-        }else {
-            //如果有传入参数
-            myMarker=(MyMarker)getIntent().getSerializableExtra("model");
+        if (myMarker == null) {
+            //如果未获取到传入参数
+            myMarker = (MyMarker) getIntent().getSerializableExtra("model");
         }
+
+        MarkerOptions oo = new MarkerOptions()
+                .title(myMarker.getName())
+                .position(new LatLng(Double.parseDouble(myMarker.getLat()), Double.parseDouble(myMarker.getLon())))
+                .icon(getBd(myMarker.getType()))
+                .alpha(0.8f)
+                .animateType(MarkerOptions.MarkerAnimateType.grow);
+        mBaiduMap.addOverlay(oo);
+        sumList.add(myMarker);
+
+        //切换视图
+        switchView(Double.parseDouble(myMarker.getLat()), Double.parseDouble(myMarker.getLon()), 11);
+
+        //显示弹框，xml转视图
+        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View view = inflater.inflate(R.layout.pop_map_info, null);
+        TextView textView = (TextView) view.findViewById(R.id.title_tv);
+        ImageView imageView = (ImageView) view.findViewById(R.id.img_iv);
+
+        InfoWindow.OnInfoWindowClickListener listener = null;
+
+        //设置标题
+        textView.setText(myMarker.getName());
+        //设置相应图标
+        imageView.setImageResource(imgs[myMarker.getType()]);
+
+        LatLng toLoc = new LatLng(Double.parseDouble(myMarker.getLat()), Double.parseDouble(myMarker.getLon()));
+        listener = () -> {
+            T.showShort(context, "开始导航...");
+
+            String fromName = "我的位置";
+            LatLng fromLoc = new LatLng(mCurrentLat, mCurrentLon);
+
+            String toName = myMarker.getName();
+            startNavi(fromName, fromLoc, toName, toLoc);
+        };
+
+        mInfoWindow = new InfoWindow(BitmapDescriptorFactory.fromView(view), toLoc, -50, listener);
+        mBaiduMap.showInfoWindow(mInfoWindow);
     }
-    
+
     /**
      * 显示景点
      */
-    private void showScenery(){
+    private void showScenery() {
         //清空图标
         mBaiduMap.clear();
-        
+
         //若已请求过，直接显示
-        if(sceneryList!=null && sceneryList.size()>0){
+        if (sceneryList != null && sceneryList.size() > 0) {
             addMarkerToMap(sceneryList);
             switchView(Double.parseDouble(sceneryList.get(0).getLat())
-                    ,Double.parseDouble(sceneryList.get(0).getLon()),11);
+                    , Double.parseDouble(sceneryList.get(0).getLon()), 11);
             return;
         }
 
@@ -314,8 +340,8 @@ public class MapActivity extends AppCompatActivity implements SensorEventListene
             @Override
             public void onSuccess(List<Scenery> datas) {
                 //转mymarker
-                for(Scenery model:datas){
-                    MyMarker marker=new MyMarker();
+                for (Scenery model : datas) {
+                    MyMarker marker = new MyMarker();
                     marker.setName(model.getTitle());
                     marker.setType(0);
                     marker.setImg(model.getImg());
@@ -325,12 +351,12 @@ public class MapActivity extends AppCompatActivity implements SensorEventListene
                 }
                 addMarkerToMap(sceneryList);
                 switchView(Double.parseDouble(sceneryList.get(0).getLat())
-                        ,Double.parseDouble(sceneryList.get(0).getLon()),11);
+                        , Double.parseDouble(sceneryList.get(0).getLon()), 11);
             }
 
             @Override
             public void onFailed(Exception e) {
-                T.showShort(context,"获取数据失败");
+                T.showShort(context, "获取数据失败");
             }
         });
     }
@@ -338,15 +364,15 @@ public class MapActivity extends AppCompatActivity implements SensorEventListene
     /**
      * 显示美食
      */
-    private void showFood(){
+    private void showFood() {
         //清空图标
         mBaiduMap.clear();
 
         //若已请求过，直接显示
-        if(foodList!=null && foodList.size()>0){
+        if (foodList != null && foodList.size() > 0) {
             addMarkerToMap(foodList);
             switchView(Double.parseDouble(foodList.get(0).getLat())
-                    ,Double.parseDouble(foodList.get(0).getLon()),11);
+                    , Double.parseDouble(foodList.get(0).getLon()), 11);
             return;
         }
 
@@ -354,8 +380,8 @@ public class MapActivity extends AppCompatActivity implements SensorEventListene
             @Override
             public void onSuccess(List<Restaurant> datas) {
                 //转mymarker
-                for(Restaurant model:datas){
-                    MyMarker marker=new MyMarker();
+                for (Restaurant model : datas) {
+                    MyMarker marker = new MyMarker();
                     marker.setName(model.getName());
                     marker.setType(0);
                     marker.setImg(model.getImgs());
@@ -365,12 +391,12 @@ public class MapActivity extends AppCompatActivity implements SensorEventListene
                 }
                 addMarkerToMap(foodList);
                 switchView(Double.parseDouble(foodList.get(0).getLat())
-                        ,Double.parseDouble(foodList.get(0).getLon()),11);
+                        , Double.parseDouble(foodList.get(0).getLon()), 11);
             }
 
             @Override
             public void onFailed(Exception e) {
-                T.showShort(context,"获取数据失败");
+                T.showShort(context, "获取数据失败");
             }
         });
     }
@@ -378,15 +404,15 @@ public class MapActivity extends AppCompatActivity implements SensorEventListene
     /**
      * 显示酒店
      */
-    private void showHotel(){
+    private void showHotel() {
         //清空图标
         mBaiduMap.clear();
 
         //若已请求过，直接显示
-        if(hotelList!=null && hotelList.size()>0){
+        if (hotelList != null && hotelList.size() > 0) {
             addMarkerToMap(hotelList);
             switchView(Double.parseDouble(hotelList.get(0).getLat())
-                    ,Double.parseDouble(hotelList.get(0).getLon()),11);
+                    , Double.parseDouble(hotelList.get(0).getLon()), 11);
             return;
         }
 
@@ -394,8 +420,8 @@ public class MapActivity extends AppCompatActivity implements SensorEventListene
             @Override
             public void onSuccess(List<Hotel> datas) {
                 //转mymarker
-                for(Hotel model:datas){
-                    MyMarker marker=new MyMarker();
+                for (Hotel model : datas) {
+                    MyMarker marker = new MyMarker();
                     marker.setName(model.getName());
                     marker.setType(0);
                     marker.setImg(model.getImgs());
@@ -405,23 +431,24 @@ public class MapActivity extends AppCompatActivity implements SensorEventListene
                 }
                 addMarkerToMap(hotelList);
                 switchView(Double.parseDouble(hotelList.get(0).getLat())
-                        ,Double.parseDouble(hotelList.get(0).getLon()),11);
+                        , Double.parseDouble(hotelList.get(0).getLon()), 11);
             }
 
             @Override
             public void onFailed(Exception e) {
-                T.showShort(context,"获取数据失败");
+                T.showShort(context, "获取数据失败");
             }
         });
     }
 
     /**
      * 添加lsit标注
+     *
      * @param list
      */
-    private void addMarkerToMap(List<MyMarker> list){
-        if (list==null || list.size()<=0)return;
-        for(MyMarker model:list){
+    private void addMarkerToMap(List<MyMarker> list) {
+        if (list == null || list.size() <= 0) return;
+        for (MyMarker model : list) {
             MarkerOptions oo = new MarkerOptions()
                     .title(model.getName())
                     .position(new LatLng(Double.parseDouble(model.getLat()), Double.parseDouble(model.getLon())))
@@ -432,14 +459,15 @@ public class MapActivity extends AppCompatActivity implements SensorEventListene
             sumList.add(model);
         }
     }
-    
+
     /**
      * 切换到某个视图
+     *
      * @param lat
      * @param lon
      * @param zoom
      */
-    private void switchView(double lat,double lon,int zoom){
+    private void switchView(double lat, double lon, int zoom) {
         ms = new MapStatus.Builder()
                 .target(new LatLng(lat, lon))
                 .overlook(0)
@@ -450,13 +478,14 @@ public class MapActivity extends AppCompatActivity implements SensorEventListene
 
     /**
      * 根据地点类型获取图标,0-景点|1-美食|2-酒店
+     *
      * @param type
      * @return
      */
-    private BitmapDescriptor getBd(int type){
+    private BitmapDescriptor getBd(int type) {
         BitmapDescriptor bd = BitmapDescriptorFactory
                 .fromResource(R.mipmap.icon_loc_spot);
-        switch (type){
+        switch (type) {
             case TYPE_SCENERY:
                 bd = BitmapDescriptorFactory
                         .fromResource(R.mipmap.icon_loc_spot);
@@ -472,7 +501,7 @@ public class MapActivity extends AppCompatActivity implements SensorEventListene
         }
         return bd;
     }
-    
+
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
         double x = sensorEvent.values[SensorManager.DATA_X];
@@ -541,6 +570,8 @@ public class MapActivity extends AppCompatActivity implements SensorEventListene
         //为系统的方向传感器注册监听器
         mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION),
                 SensorManager.SENSOR_DELAY_UI);
+        //显示传入位置，需延时，否则定位自动回调
+        new Handler().postDelayed(() -> showTarget(), 2000);
     }
 
     @Override
@@ -561,5 +592,28 @@ public class MapActivity extends AppCompatActivity implements SensorEventListene
         super.onDestroy();
         // 回收 bitmap 资源
 //        bd.recycle();
+    }
+
+    /**
+     * 根据传入标注信息并启动自身
+     */
+    public static void startMyself(Context context, MyMarker myMarker) {
+        if (myMarker == null) {
+            MyMarker marker = new MyMarker();
+            marker.setType(TYPE_SCENERY);
+            marker.setImg("https://gss0.bdstatic.com/94o3dSag_xI4khGkpoWK1HF6hhy/baike/crop%3D89%2C0%2C710%2C469%3Bc0%3Dbaike92%2C5%2C5%2C92%2C30/sign=69cc9ade00fa513d45e5369e00556cd7/42166d224f4a20a4be6033c598529822720ed0b2.jpg");
+            marker.setName("三亚市");
+            marker.setLat("18.244147");
+            marker.setLon("109.515652");
+            startMyself(context, marker);
+            return;
+        }
+
+        Intent intent = new Intent();
+        intent.setClass(context, MapActivity.class);
+        Bundle mBundle = new Bundle();
+        mBundle.putSerializable("model", myMarker);
+        intent.putExtras(mBundle);
+        context.startActivity(intent);
     }
 }

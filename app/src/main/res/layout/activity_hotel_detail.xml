@@ -60,14 +60,23 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:gravity="center_vertical"
                 android:layout_margin="5dp">
                 <TextView
                     android:id="@+id/location_tv"
-                    android:layout_width="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:textSize="@dimen/text_size2"
                     android:textColor="@color/text_black1"
                     android:text="三亚湾路168号（近海虹路）"/>
+                <TextView
+                    android:id="@+id/readMap_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/text_size2"
+                    android:textColor="@color/theme_color"
+                    android:text="查看地图"/>
             </LinearLayout>
 
             <include layout="@layout/divider_h"/>

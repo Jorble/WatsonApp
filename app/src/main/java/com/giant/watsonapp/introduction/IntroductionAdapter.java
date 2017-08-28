@@ -69,7 +69,7 @@ public class IntroductionAdapter extends RecyclerView.Adapter<IntroductionViewHo
         holder.section_ll.setOnClickListener((View view)->{
             switch (model.getId()){
                 case "2":
-                    mContext.startActivity(new Intent(mContext,MapActivity.class));
+                    MapActivity.startMyself(mContext,null);
                     break;
                 case "3":
                     mContext.startActivity(new Intent(mContext,HotelActivity.class));

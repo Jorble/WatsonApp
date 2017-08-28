@@ -27,6 +27,8 @@ public class SceneryViewHolder extends RecyclerView.ViewHolder {
     ImageView play;
     @BindView(R.id.time_marker)
     TimelineView mTimelineView;
+    @BindView(R.id.readMap_tv)
+    TextView readMap;
 
     public SceneryViewHolder(View itemView, int viewType) {
         super(itemView);

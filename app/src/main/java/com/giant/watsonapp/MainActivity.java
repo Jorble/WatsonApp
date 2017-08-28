@@ -97,18 +97,7 @@ public class MainActivity extends AppCompatActivity {
                 UiUtils.startActivity(this, IntroductionActivity.class);
                 break;
             case R.id.menu_traffic:
-                MyMarker myMarker=new MyMarker();
-                myMarker.setType(0);
-                myMarker.setImg("https://gss0.bdstatic.com/94o3dSag_xI4khGkpoWK1HF6hhy/baike/crop%3D89%2C0%2C710%2C469%3Bc0%3Dbaike92%2C5%2C5%2C92%2C30/sign=69cc9ade00fa513d45e5369e00556cd7/42166d224f4a20a4be6033c598529822720ed0b2.jpg");
-                myMarker.setName("三亚市");
-                myMarker.setLat("18.244147");
-                myMarker.setLon("109.515652");
-                Intent intent=new Intent();
-                intent.setClass(this,MapActivity.class);
-                Bundle mBundle = new Bundle();
-                mBundle.putSerializable("model",myMarker);
-                intent.putExtras(mBundle);
-                startActivity(intent);
+                MapActivity.startMyself(this,null);
                 break;
             case R.id.menu_hotel:
                 UiUtils.startActivity(this, HotelActivity.class);

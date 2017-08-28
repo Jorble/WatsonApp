@@ -27,12 +27,12 @@
             android:layout_marginLeft="10dp"
             android:layout_alignParentLeft="true"
             android:src="@mipmap/icon_loc_me"
-            android:layout_above="@+id/showCurrentLoc_iv"
+            android:layout_above="@+id/showTargetLoc_iv"
             android:layout_marginBottom="20dp"
             />
 
         <ImageView
-            android:id="@+id/showCurrentLoc_iv"
+            android:id="@+id/showTargetLoc_iv"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_marginLeft="10dp"

@@ -13,6 +13,8 @@ import android.view.ViewGroup;
 import com.bumptech.glide.Glide;
 import com.giant.watsonapp.Const;
 import com.giant.watsonapp.R;
+import com.giant.watsonapp.map.MapActivity;
+import com.giant.watsonapp.models.MyMarker;
 import com.giant.watsonapp.models.OrderStatus;
 import com.giant.watsonapp.models.Orientation;
 import com.giant.watsonapp.models.Scenery;
@@ -27,6 +29,8 @@ import org.greenrobot.eventbus.EventBus;
 import java.util.List;
 
 import jp.wasabeef.glide.transformations.CropCircleTransformation;
+
+import static com.giant.watsonapp.map.MapActivity.TYPE_SCENERY;
 
 /**
  * Created by HP-HP on 05-12-2015.
@@ -106,6 +110,20 @@ public class SceneryAdapter extends RecyclerView.Adapter<SceneryViewHolder> {
             Intent intent = new Intent(mContext, WebActivity.class);
             intent.putExtra("url", timeLineModel.getUrl());
             mContext.startActivity(intent);
+        });
+
+        holder.readMap.setOnClickListener((View view)->{
+            if(TextUtils.isEmpty(timeLineModel.getLat()) || TextUtils.isEmpty(timeLineModel.getLon())){
+                T.showShort(mContext,"暂无地图信息");
+                return;
+            }
+            MyMarker myMarker=new MyMarker();
+            myMarker.setType(TYPE_SCENERY);
+            myMarker.setImg(timeLineModel.getImg());
+            myMarker.setName(timeLineModel.getTitle());
+            myMarker.setLat(timeLineModel.getLat());
+            myMarker.setLon(timeLineModel.getLon());
+            MapActivity.startMyself(mContext,myMarker);
         });
 
         holder.play.setOnClickListener((View view)->{

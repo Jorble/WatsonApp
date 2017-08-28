@@ -16,7 +16,7 @@ import java.util.List;
 
 public class SceneryDao {
 
-    private static final String QUERY_ALL = "SELECT * FROM scenery";
+    private static final String QUERY_ALL = "SELECT * FROM scenery LIMIT 0,10";
 
     private static final String FIELD_ID = "id";
     private static final String FIELD_TITLE = "title";

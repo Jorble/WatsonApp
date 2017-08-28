@@ -16,7 +16,7 @@ import java.util.List;
 
 public class ConversationDao {
 
-    private static final String QUERY_ALL = "SELECT * FROM conversation";
+    private static final String QUERY_ALL = "SELECT * FROM conversation LIMIT 0,20";
 
     private static final String QUERY_BY_RESTID = "SELECT * FROM conversation WHERE id = ";
 

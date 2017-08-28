@@ -3,6 +3,7 @@ package com.giant.watsonapp.map;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -43,6 +44,13 @@ import com.baidu.mapapi.navi.NaviParaOption;
 import com.baidu.mapapi.utils.OpenClientUtil;
 import com.bumptech.glide.Glide;
 import com.giant.watsonapp.R;
+import com.giant.watsonapp.models.Hotel;
+import com.giant.watsonapp.models.HotelDao;
+import com.giant.watsonapp.models.MyMarker;
+import com.giant.watsonapp.models.Restaurant;
+import com.giant.watsonapp.models.RestaurantDao;
+import com.giant.watsonapp.models.Scenery;
+import com.giant.watsonapp.models.SceneryDao;
 import com.giant.watsonapp.utils.T;
 import com.jaeger.library.StatusBarUtil;
 
@@ -55,6 +63,9 @@ import butterknife.OnClick;
 import jp.wasabeef.glide.transformations.CropCircleTransformation;
 
 import static android.R.attr.button;
+import static android.R.attr.mode;
+import static com.baidu.location.d.a.i;
+import static com.giant.watsonapp.models.SceneryDao.queryAll;
 
 public class MapActivity extends AppCompatActivity implements SensorEventListener {
 
@@ -73,8 +84,6 @@ public class MapActivity extends AppCompatActivity implements SensorEventListene
 
     private MyLocationConfiguration.LocationMode mCurrentMode;
     BitmapDescriptor mCurrentMarker;
-    private static final int accuracyCircleFillColor = 0xAAFFFF88;
-    private static final int accuracyCircleStrokeColor = 0xAA00FF00;
     private SensorManager mSensorManager;
     private Double lastX = 0.0;
     private int mCurrentDirection = 0;
@@ -86,34 +95,32 @@ public class MapActivity extends AppCompatActivity implements SensorEventListene
     MapStatus ms;
 
     // UI相关
-    RadioGroup.OnCheckedChangeListener radioButtonListener;
-    Button requestLocButton;
     boolean isFirstLoc = true; // 是否首次定位
     private MyLocationData locData;
-    private float direction;
 
     Context context;
 
-    //三亚景点中心坐标
-    private double mSanYaLat = 18.244147;
-    private double mSanYaLon = 109.515652;
+    //对应图标，0-景点|1-美食|2-酒店
     private int[] imgs = {
-            R.mipmap.sanya01, R.mipmap.sanya02, R.mipmap.sanya03, R.mipmap.sanya04,
-            R.mipmap.sanya05, R.mipmap.sanya06, R.mipmap.sanya07, R.mipmap.sanya08,
-            R.mipmap.sanya09, R.mipmap.sanya10
+            R.mipmap.sanya01, R.mipmap.sanya02, R.mipmap.sanya03,
     };
 
+    //跳转的传入对象
+    MyMarker myMarker;
+    List<MyMarker> sumList=new ArrayList<>();//汇总list
+
     // 绘制覆盖物
-    private List<Marker> markerList = new ArrayList<>();
+    private List<MyMarker> sceneryList = new ArrayList<>();
+    private List<MyMarker> foodList = new ArrayList<>();
+    private List<MyMarker> hotelList = new ArrayList<>();
 
     private InfoWindow mInfoWindow;
 
-    // 初始化全局 bitmap 信息，不用时及时 recycle
-    BitmapDescriptor bd = BitmapDescriptorFactory
-            .fromResource(R.mipmap.icon_loc_spot);
-
-    // 坐标类型
-    private CoordType mCoordType;
+    
+    //0-景点|1-美食|2-酒店
+    private static final int TYPE_SCENERY=0;
+    private static final int TYPE_FOOD=1;
+    private static final int TYPE_HOTEL=2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -130,8 +137,7 @@ public class MapActivity extends AppCompatActivity implements SensorEventListene
         // 地图初始化
         mBaiduMap = bmapView.getMap();
 
-        //绘制标记
-        initOverlay();
+        //标记点击事件
         mBaiduMap.setOnMarkerClickListener(new BaiduMap.OnMarkerClickListener() {
             public boolean onMarkerClick(final Marker marker) {
                 //xml转视图
@@ -141,10 +147,14 @@ public class MapActivity extends AppCompatActivity implements SensorEventListene
                 ImageView imageView = (ImageView) view.findViewById(R.id.img_iv);
 
                 InfoWindow.OnInfoWindowClickListener listener = null;
-                for (int i = 0; i < markerList.size(); i++) {
-                    if (marker == markerList.get(i)) {
-                        textView.setText(marker.getTitle());
-                        imageView.setImageResource(imgs[i]);
+
+                for (MyMarker model:sumList) {
+                    if (marker.getTitle().equals(model.getName())) {
+                        //设置标题
+                        textView.setText(model.getName());
+                        //设置相应图标
+                        imageView.setImageResource(imgs[model.getType()]);
+
                         listener = () -> {
                             T.showShort(context, "开始导航...");
 
@@ -186,88 +196,6 @@ public class MapActivity extends AppCompatActivity implements SensorEventListene
         builder.overlook(0);
         mBaiduMap.animateMapStatus(MapStatusUpdateFactory.newMapStatus(builder.build()));
 
-        mCoordType = SDKInitializer.getCoordType();//获取全局设置的坐标类型
-    }
-
-    /**
-     * 初始化标记
-     */
-    public void initOverlay() {
-        // add marker overlay
-        MarkerOptions oo = new MarkerOptions()
-                .title("亚龙湾热带天堂森林公园")
-                .position(new LatLng(18.25797, 109.659829))
-                .icon(bd)
-                .animateType(MarkerOptions.MarkerAnimateType.grow);
-        markerList.add((Marker) (mBaiduMap.addOverlay(oo)));
-
-        MarkerOptions oo2 = new MarkerOptions()
-                .title("亚龙湾")
-                .position(new LatLng(18.236155, 109.654556))
-                .icon(bd)
-                .animateType(MarkerOptions.MarkerAnimateType.grow);
-        markerList.add((Marker) (mBaiduMap.addOverlay(oo2)));
-
-        MarkerOptions oo3 = new MarkerOptions()
-                .title("南山文化旅游区")
-                .position(new LatLng(18.310497, 109.21997))
-                .icon(bd)
-                .animateType(MarkerOptions.MarkerAnimateType.grow);
-        markerList.add((Marker) (mBaiduMap.addOverlay(oo3)));
-
-        MarkerOptions oo4 = new MarkerOptions()
-                .title("天涯海角")
-                .position(new LatLng(18.300306, 109.357845))
-                .icon(bd)
-                .animateType(MarkerOptions.MarkerAnimateType.grow);
-        markerList.add((Marker) (mBaiduMap.addOverlay(oo4)));
-
-        MarkerOptions oo5 = new MarkerOptions()
-                .title("椰梦长廊")
-                .position(new LatLng(18.276361, 109.488119))
-                .icon(bd)
-                .animateType(MarkerOptions.MarkerAnimateType.grow);
-        markerList.add((Marker) (mBaiduMap.addOverlay(oo5)));
-
-        MarkerOptions oo6 = new MarkerOptions()
-                .title("蜈支洲岛")
-                .position(new LatLng(18.320088, 109.770888))
-                .icon(bd)
-                .animateType(MarkerOptions.MarkerAnimateType.grow);
-        markerList.add((Marker) (mBaiduMap.addOverlay(oo6)));
-
-        MarkerOptions oo7 = new MarkerOptions()
-                .title("第一市场")
-                .position(new LatLng(18.244147, 109.515652))
-                .icon(bd)
-                .animateType(MarkerOptions.MarkerAnimateType.grow);
-        markerList.add((Marker) (mBaiduMap.addOverlay(oo7)));
-
-        MarkerOptions oo8 = new MarkerOptions()
-                .title("珠江南田温泉")
-                .position(new LatLng(18.414564, 109.735525))
-                .icon(bd)
-                .animateType(MarkerOptions.MarkerAnimateType.grow);
-        markerList.add((Marker) (mBaiduMap.addOverlay(oo8)));
-
-        MarkerOptions oo9 = new MarkerOptions()
-                .title("大东海")
-                .position(new LatLng(18.228685, 109.530103))
-                .icon(bd)
-                .animateType(MarkerOptions.MarkerAnimateType.grow);
-        markerList.add((Marker) (mBaiduMap.addOverlay(oo9)));
-
-        MarkerOptions oo10 = new MarkerOptions()
-                .title("三亚千古情景区")
-                .position(new LatLng(18.298032, 109.537426))
-                .icon(bd)
-                .animateType(MarkerOptions.MarkerAnimateType.grow);
-        markerList.add((Marker) (mBaiduMap.addOverlay(oo10)));
-
-        //半透明
-        for (Marker marker : markerList) {
-            marker.setAlpha(0.8f);
-        }
     }
 
     /**
@@ -318,33 +246,233 @@ public class MapActivity extends AppCompatActivity implements SensorEventListene
 
     }
 
-    @OnClick({R.id.back_iv, R.id.title_tv, R.id.showMyLoc_iv, R.id.showSpotLoc_iv})
+    @OnClick({R.id.back_iv, R.id.title_tv, R.id.showMyLoc_iv, R.id.showCurrentLoc_iv
+            , R.id.showSceneryLoc_iv, R.id.showFoodLoc_iv, R.id.showHotelLoc_iv
+    })
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.back_iv:
                 finish();
                 break;
             case R.id.showMyLoc_iv:
-                ms = new MapStatus.Builder()
-                        .target(new LatLng(mCurrentLat, mCurrentLon))
-                        .overlook(0)
-                        .zoom(17)
-                        .build();
-                mBaiduMap.animateMapStatus(MapStatusUpdateFactory.newMapStatus(ms));
+                switchView(mCurrentLat,mCurrentLon,17);
                 break;
-            case R.id.showSpotLoc_iv:
-                ms = new MapStatus.Builder()
-                        .target(new LatLng(mSanYaLat, mSanYaLon))
-                        .overlook(0)
-                        .zoom(11)
-                        .build();
-                mBaiduMap.animateMapStatus(MapStatusUpdateFactory.newMapStatus(ms));
+            case R.id.showCurrentLoc_iv:
+                showCurrent();
+                switchView(Double.parseDouble(myMarker.getLat()),Double.parseDouble(myMarker.getLon()),11);
+                break;
+            case R.id.showSceneryLoc_iv:
+                showScenery();
+                break;
+            case R.id.showFoodLoc_iv:
+                showFood();
+                break;
+            case R.id.showHotelLoc_iv:
+                showHotel();
                 break;
             case R.id.title_tv:
                 break;
         }
     }
 
+    /**
+     * 显示传入的地点
+     */
+    private void showCurrent(){
+        mBaiduMap.clear();
+        if(myMarker!=null){
+            MarkerOptions oo = new MarkerOptions()
+                    .title(myMarker.getName())
+                    .position(new LatLng(Double.parseDouble(myMarker.getLat()), Double.parseDouble(myMarker.getLon())))
+                    .icon(getBd(myMarker.getType()))
+                    .alpha(0.8f)
+                    .animateType(MarkerOptions.MarkerAnimateType.grow);
+            mBaiduMap.addOverlay(oo);
+            sumList.add(myMarker);
+        }else {
+            //如果有传入参数
+            myMarker=(MyMarker)getIntent().getSerializableExtra("model");
+        }
+    }
+    
+    /**
+     * 显示景点
+     */
+    private void showScenery(){
+        //清空图标
+        mBaiduMap.clear();
+        
+        //若已请求过，直接显示
+        if(sceneryList!=null && sceneryList.size()>0){
+            addMarkerToMap(sceneryList);
+            switchView(Double.parseDouble(sceneryList.get(0).getLat())
+                    ,Double.parseDouble(sceneryList.get(0).getLon()),11);
+            return;
+        }
+
+        SceneryDao.queryAll(new SceneryDao.DbCallBack() {
+            @Override
+            public void onSuccess(List<Scenery> datas) {
+                //转mymarker
+                for(Scenery model:datas){
+                    MyMarker marker=new MyMarker();
+                    marker.setName(model.getTitle());
+                    marker.setType(0);
+                    marker.setImg(model.getImg());
+                    marker.setLat(model.getLat());
+                    marker.setLon(model.getLon());
+                    sceneryList.add(marker);
+                }
+                addMarkerToMap(sceneryList);
+                switchView(Double.parseDouble(sceneryList.get(0).getLat())
+                        ,Double.parseDouble(sceneryList.get(0).getLon()),11);
+            }
+
+            @Override
+            public void onFailed(Exception e) {
+                T.showShort(context,"获取数据失败");
+            }
+        });
+    }
+
+    /**
+     * 显示美食
+     */
+    private void showFood(){
+        //清空图标
+        mBaiduMap.clear();
+
+        //若已请求过，直接显示
+        if(foodList!=null && foodList.size()>0){
+            addMarkerToMap(foodList);
+            switchView(Double.parseDouble(foodList.get(0).getLat())
+                    ,Double.parseDouble(foodList.get(0).getLon()),11);
+            return;
+        }
+
+        RestaurantDao.queryAll(new RestaurantDao.DbCallBack() {
+            @Override
+            public void onSuccess(List<Restaurant> datas) {
+                //转mymarker
+                for(Restaurant model:datas){
+                    MyMarker marker=new MyMarker();
+                    marker.setName(model.getName());
+                    marker.setType(0);
+                    marker.setImg(model.getImgs());
+                    marker.setLat(model.getLat());
+                    marker.setLon(model.getLon());
+                    foodList.add(marker);
+                }
+                addMarkerToMap(foodList);
+                switchView(Double.parseDouble(foodList.get(0).getLat())
+                        ,Double.parseDouble(foodList.get(0).getLon()),11);
+            }
+
+            @Override
+            public void onFailed(Exception e) {
+                T.showShort(context,"获取数据失败");
+            }
+        });
+    }
+
+    /**
+     * 显示酒店
+     */
+    private void showHotel(){
+        //清空图标
+        mBaiduMap.clear();
+
+        //若已请求过，直接显示
+        if(hotelList!=null && hotelList.size()>0){
+            addMarkerToMap(hotelList);
+            switchView(Double.parseDouble(hotelList.get(0).getLat())
+                    ,Double.parseDouble(hotelList.get(0).getLon()),11);
+            return;
+        }
+
+        HotelDao.queryAll(new HotelDao.DbCallBack() {
+            @Override
+            public void onSuccess(List<Hotel> datas) {
+                //转mymarker
+                for(Hotel model:datas){
+                    MyMarker marker=new MyMarker();
+                    marker.setName(model.getName());
+                    marker.setType(0);
+                    marker.setImg(model.getImgs());
+                    marker.setLat(model.getLat());
+                    marker.setLon(model.getLon());
+                    hotelList.add(marker);
+                }
+                addMarkerToMap(hotelList);
+                switchView(Double.parseDouble(hotelList.get(0).getLat())
+                        ,Double.parseDouble(hotelList.get(0).getLon()),11);
+            }
+
+            @Override
+            public void onFailed(Exception e) {
+                T.showShort(context,"获取数据失败");
+            }
+        });
+    }
+
+    /**
+     * 添加lsit标注
+     * @param list
+     */
+    private void addMarkerToMap(List<MyMarker> list){
+        if (list==null || list.size()<=0)return;
+        for(MyMarker model:list){
+            MarkerOptions oo = new MarkerOptions()
+                    .title(model.getName())
+                    .position(new LatLng(Double.parseDouble(model.getLat()), Double.parseDouble(model.getLon())))
+                    .icon(getBd(model.getType()))
+                    .alpha(0.8f)
+                    .animateType(MarkerOptions.MarkerAnimateType.grow);
+            mBaiduMap.addOverlay(oo);
+            sumList.add(model);
+        }
+    }
+    
+    /**
+     * 切换到某个视图
+     * @param lat
+     * @param lon
+     * @param zoom
+     */
+    private void switchView(double lat,double lon,int zoom){
+        ms = new MapStatus.Builder()
+                .target(new LatLng(lat, lon))
+                .overlook(0)
+                .zoom(zoom)
+                .build();
+        mBaiduMap.animateMapStatus(MapStatusUpdateFactory.newMapStatus(ms));
+    }
+
+    /**
+     * 根据地点类型获取图标,0-景点|1-美食|2-酒店
+     * @param type
+     * @return
+     */
+    private BitmapDescriptor getBd(int type){
+        BitmapDescriptor bd = BitmapDescriptorFactory
+                .fromResource(R.mipmap.icon_loc_spot);
+        switch (type){
+            case TYPE_SCENERY:
+                bd = BitmapDescriptorFactory
+                        .fromResource(R.mipmap.icon_loc_spot);
+                break;
+            case TYPE_FOOD:
+                bd = BitmapDescriptorFactory
+                        .fromResource(R.mipmap.icon_loc_spot);
+                break;
+            case TYPE_HOTEL:
+                bd = BitmapDescriptorFactory
+                        .fromResource(R.mipmap.icon_loc_spot);
+                break;
+        }
+        return bd;
+    }
+    
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
         double x = sensorEvent.values[SensorManager.DATA_X];
@@ -432,6 +560,6 @@ public class MapActivity extends AppCompatActivity implements SensorEventListene
         bmapView = null;
         super.onDestroy();
         // 回收 bitmap 资源
-        bd.recycle();
+//        bd.recycle();
     }
 }

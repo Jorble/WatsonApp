@@ -16,7 +16,7 @@ import java.util.List;
 
 public class RestaurantDao {
 
-    private static final String QUERY_ALL = "SELECT * FROM restaurant";
+    private static final String QUERY_ALL = "SELECT * FROM restaurant LIMIT 0,10";
 
     private static final String FIELD_ID = "id";
     private static final String FIELD_NAME = "name";
@@ -24,6 +24,8 @@ public class RestaurantDao {
     private static final String FIELD_STAR = "star";
     private static final String FIELD_LOCATION = "location";
     private static final String FIELD_IMGS = "imgs";
+    private static final String FIELD_LAT = "lat";
+    private static final String FIELD_LON = "lon";
 
     /**
      * 获取所有数据
@@ -51,6 +53,8 @@ public class RestaurantDao {
                         bean.setStar(hashMap.get(FIELD_STAR).toString());
                         bean.setLocation(hashMap.get(FIELD_LOCATION).toString());
                         bean.setImgs(hashMap.get(FIELD_IMGS).toString());
+                        bean.setLat(hashMap.get(FIELD_LAT).toString());
+                        bean.setLon(hashMap.get(FIELD_LON).toString());
                         mDatas.add(bean);
                     }
                     // 异步进入主线程,无需等待

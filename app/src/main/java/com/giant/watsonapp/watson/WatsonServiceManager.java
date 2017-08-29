@@ -125,14 +125,13 @@ public class WatsonServiceManager {
      */
     public static RecognizeOptions getSttRecognizeOptions() {
         return new RecognizeOptions.Builder()
-                .continuous(true)
-                .contentType(ContentType.OPUS.toString())
-                //.model("en-UK_NarrowbandModel")
+                .continuous(false)//如果这是真的,连续多个最终结果代表多个短语被暂停回来了。否则,识别结束后第一次检测到“言论”的终结。
+                .contentType(ContentType.OPUS.toString())//解析语音类型，RAW("audio/l16;rate=16000"), OPUS("audio/ogg;codec=opus");
                 .model(SpeechModel.ZH_CN_NARROWBANDMODEL.getName())//语言配置
-                .interimResults(false)//识别只返回最后一条final
-                .inactivityTimeout(2000)
+                .interimResults(false)//是否返回暂时的结果，还是识别只返回最后一条final
+                .inactivityTimeout(10000)//不活动的超时时间
                 //TODO: Uncomment this to enable Speaker Diarization
-                //.speakerLabels(true)
+//                .speakerLabels(true)
                 .build();
     }
 }

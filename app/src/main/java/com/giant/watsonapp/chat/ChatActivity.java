@@ -43,6 +43,7 @@ import com.giant.watsonapp.views.CircularRippleButton;
 import com.giant.watsonapp.watson.WatsonServiceManager;
 import com.giant.watsonapp.web.WebActivity;
 import com.github.florent37.viewanimator.ViewAnimator;
+import com.ibm.watson.developer_cloud.android.library.audio.AmplitudeListener;
 import com.ibm.watson.developer_cloud.android.library.audio.MicrophoneInputStream;
 import com.ibm.watson.developer_cloud.conversation.v1.ConversationService;
 import com.ibm.watson.developer_cloud.conversation.v1.model.MessageRequest;
@@ -61,6 +62,7 @@ import com.jph.takephoto.app.TakePhotoActivity;
 import com.jph.takephoto.model.TImage;
 import com.jph.takephoto.model.TResult;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -147,6 +149,7 @@ public class ChatActivity extends TakePhotoActivity implements EasyPermissions.P
     SpeechToText speechToTextService;
     private boolean listening = false;
     private MicrophoneInputStream capture;
+    MicrophoneRecognizeDelegate microphoneRecognizeDelegate;
 
     VisualRecognition visualRecognitionService;
 
@@ -166,6 +169,7 @@ public class ChatActivity extends TakePhotoActivity implements EasyPermissions.P
         speechToTextService = WatsonServiceManager.initSpeechToTextService();
         visualRecognitionService = WatsonServiceManager.initVisualRecognitionService();
         conversationAPI("你好");//先发送一次进行场景初始化
+        microphoneRecognizeDelegate = new MicrophoneRecognizeDelegate();
 
         this.mImm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         mWindow = getWindow();
@@ -199,54 +203,56 @@ public class ChatActivity extends TakePhotoActivity implements EasyPermissions.P
                 });
 
         //语音输入
-        menuInputAudio.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        //动画
-                        startBlowUpAnim(menuInputAudio);
-                        if (!listening) {
-                            new Thread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    try {
-                                        //打开麦克风
-                                        capture = new MicrophoneInputStream(true);
-                                        speechToTextService.recognizeUsingWebSocket(capture, getSttRecognizeOptions(), new MicrophoneRecognizeDelegate());
-                                    } catch (Exception e) {
-                                        L.e(e.getMessage());
-                                    }
-                                }
-                            }).start();
-                            listening = true;
-                            L.i("Listening....");
-                        }
-                        return true;
-                    case MotionEvent.ACTION_UP:
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                startDrawBackAnim(menuInputAudio);
-                                if (listening) {
-                                    try {
-                                        capture.close();
-                                        listening = false;
-                                        L.i("Stopped Listening!");
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
-                                    }
-                                }
-                            }
-                        }, 2000);
-                        return true;
-                    default:
-                        break;
-                }
-                return false;
+        menuInputAudio.setOnTouchListener((View v, MotionEvent event) -> {
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    openMicrop();
+                    return true;
+                case MotionEvent.ACTION_UP:
+                    closeMicrop();
+                    return true;
+                default:
+                    break;
             }
+            return false;
         });
 
+    }
+
+    /**
+     * 打开麦克风
+     */
+    private void openMicrop() {
+        if (!listening) {
+            startBlowUpAnim(menuInputAudio);
+            new Thread(() -> {
+                try {
+                    //打开麦克风
+                    capture = new MicrophoneInputStream(true);
+                    speechToTextService.recognizeUsingWebSocket(capture, getSttRecognizeOptions(), microphoneRecognizeDelegate);
+                    L.i("Listening....");
+                } catch (Exception e) {
+                    L.e(e.getMessage());
+                }
+            }).start();
+        }
+    }
+
+    /**
+     * 关闭麦克风
+     */
+    private void closeMicrop() {
+        startDrawBackAnim(menuInputAudio);
+        new Thread(() -> {
+            try {
+                if (capture != null) {
+                    capture.close();
+                    L.i("Stopped Listening!");
+                }
+            } catch (Exception e) {
+                L.e(e.getMessage());
+            }
+        }).start();
     }
 
     @Override
@@ -329,11 +335,8 @@ public class ChatActivity extends TakePhotoActivity implements EasyPermissions.P
         }
         message.setTimeString(new SimpleDateFormat("HH:mm", Locale.getDefault()).format(new Date()));
         //显示到对话中
-        ChatActivity.this.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                mAdapter.addToStart(message, true);
-            }
+        ChatActivity.this.runOnUiThread(() -> {
+            mAdapter.addToStart(message, true);
         });
     }
 
@@ -428,11 +431,11 @@ public class ChatActivity extends TakePhotoActivity implements EasyPermissions.P
                     ConversationDao.queryById(message.getConvId(), new ConversationDao.DbCallBack() {
                         @Override
                         public void onSuccess(List<Conversation> datas) {
-                            if(datas!=null && datas.size()>0){
-                                Intent intent=new Intent();
-                                intent.setClass(context,DetailActivity.class);
+                            if (datas != null && datas.size() > 0) {
+                                Intent intent = new Intent();
+                                intent.setClass(context, DetailActivity.class);
                                 Bundle mBundle = new Bundle();
-                                mBundle.putSerializable("model",datas.get(0));
+                                mBundle.putSerializable("model", datas.get(0));
                                 intent.putExtras(mBundle);
                                 context.startActivity(intent);
                             }
@@ -486,44 +489,46 @@ public class ChatActivity extends TakePhotoActivity implements EasyPermissions.P
      * @return
      */
     public void conversationAPI(String input) {
-        MessageRequest newMessage = new MessageRequest.Builder()
-                .inputText(input).context(conversationContext).build();
-        String workspaceId = App.getCacheString(Const.WATSON_CONV_WSID_KEY, Const.WATSON_CONV_WSID_DEFAULT);
+        new Thread(() -> {
+            MessageRequest newMessage = new MessageRequest.Builder()
+                    .inputText(input).context(conversationContext).build();
+            String workspaceId = App.getCacheString(Const.WATSON_CONV_WSID_KEY, Const.WATSON_CONV_WSID_DEFAULT);
 
-        // async
-        conversationService.message(workspaceId, newMessage).enqueue(new ServiceCallback<MessageResponse>() {
-            @Override
-            public void onResponse(MessageResponse response) {
-                L.i(response.getOutput().get("text").toString());
-                conversationContext = response.getContext();//保持上下文
-                String answer = response.getOutput().get("text").toString().trim();
-                final String answerFinal = answer.substring(1, answer.length() - 1);//"[你好]",去掉首尾出现的"["和"]"
+            // async
+            conversationService.message(workspaceId, newMessage).enqueue(new ServiceCallback<MessageResponse>() {
+                @Override
+                public void onResponse(MessageResponse response) {
+                    L.i(response.getOutput().get("text").toString());
+                    conversationContext = response.getContext();//保持上下文
+                    String answer = response.getOutput().get("text").toString().trim();
+                    final String answerFinal = answer.substring(1, answer.length() - 1);//"[你好]",去掉首尾出现的"["和"]"
 
-                //"你好//id=123",如果返回是带分隔符
-                if (answerFinal.contains("//")) {
-                    //"你好//id=123"转为"你好"和"123"
-                    String[] array = answerFinal.split("//");
-                    //遍历数组
-                    for (int i = 0; i < array.length; i++) {
-                        if (array[i].contains("id=")) {//如果含有"id="的字符串，输出图文
-                            String convId = array[i].substring(3);//"id=123",剪切掉"id="
-                            queryConvById(convId);
-                        } else {//如果不含有"id="的字符串，直接输出文本
-                            creatTextMessages(ROLE_ROBOT, array[i], null);
+                    //"你好//id=123",如果返回是带分隔符
+                    if (answerFinal.contains("//")) {
+                        //"你好//id=123"转为"你好"和"123"
+                        String[] array = answerFinal.split("//");
+                        //遍历数组
+                        for (int i = 0; i < array.length; i++) {
+                            if (array[i].contains("id=")) {//如果含有"id="的字符串，输出图文
+                                String convId = array[i].substring(3);//"id=123",剪切掉"id="
+                                queryConvById(convId);
+                            } else {//如果不含有"id="的字符串，直接输出文本
+                                creatTextMessages(ROLE_ROBOT, array[i], null);
+                            }
                         }
+                    } else {//如果返回不是id，则显示原话
+                        creatTextMessages(ROLE_ROBOT, answerFinal, null);
                     }
-                } else {//如果返回不是id，则显示原话
-                    creatTextMessages(ROLE_ROBOT, answerFinal, null);
                 }
-            }
 
-            @Override
-            public void onFailure(Exception e) {
-                String answer = "网络不好，你说什么,我没听到...";
-                creatTextMessages(ROLE_ROBOT, answer, null);
-                L.e(e.toString());
-            }
-        });
+                @Override
+                public void onFailure(Exception e) {
+                    String answer = "网络不好，我听不见了你说的话...";
+                    creatTextMessages(ROLE_ROBOT, answer, null);
+                    L.e(e.toString());
+                }
+            });
+        }).start();
     }
 
     /**
@@ -574,7 +579,7 @@ public class ChatActivity extends TakePhotoActivity implements EasyPermissions.P
 
                     @Override
                     public void onFailure(Exception e) {
-                        String answer = "网络不好，你说什么,我没听到...";
+                        String answer = "网络不好，我听不见了你说的话...";
                         creatTextMessages(ROLE_ROBOT, answer, null);
                         L.e(e.toString());
                         e.printStackTrace();
@@ -707,32 +712,34 @@ public class ChatActivity extends TakePhotoActivity implements EasyPermissions.P
      * 放大动画
      */
     private void startBlowUpAnim(View view) {
-        //增加动画
-        ViewAnimator
-                .animate(view)
-                .scale(1f, 1.2f)
-                .interpolator(new AccelerateInterpolator())
-                .duration(300)
-                .onStart(() -> {
-                })
-                .onStop(() -> audioInputRipple.startRipple())
-                .start();
+        runOnUiThread(() -> {
+            ViewAnimator
+                    .animate(view)
+                    .scale(1f, 1.2f)
+                    .interpolator(new AccelerateInterpolator())
+                    .duration(200)
+                    .onStart(() -> {
+                    })
+                    .onStop(() -> audioInputRipple.startRipple())
+                    .start();
+        });
     }
 
     /**
      * 缩小动画
      */
     private void startDrawBackAnim(View view) {
-        //增加动画
-        ViewAnimator
-                .animate(view)
-                .scale(1.2f, 1f)
-                .interpolator(new AccelerateInterpolator())
-                .duration(300)
-                .onStart(() -> {
-                })
-                .onStop(() -> audioInputRipple.stopRipple())
-                .start();
+        runOnUiThread(() -> {
+            ViewAnimator
+                    .animate(view)
+                    .scale(1.2f, 1f)
+                    .interpolator(new AccelerateInterpolator())
+                    .duration(200)
+                    .onStart(() -> {
+                    })
+                    .onStop(() -> audioInputRipple.stopRipple())
+                    .start();
+        });
     }
 
     /**
@@ -770,24 +777,22 @@ public class ChatActivity extends TakePhotoActivity implements EasyPermissions.P
         @Override
         public void onConnected() {
             L.i("onConnected");
+            listening = true;
         }
 
         @Override
         public void onError(Exception e) {
             L.i("onError");
             L.e(e.getMessage());
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    T.showShort(context, "网络不好，无法进行语音识别");
-                }
-            });
-            e.printStackTrace();
+            closeMicrop();
+            listening = false;
+            creatTextMessages(ROLE_ROBOT, "网络不好，无法进行语音识别", null);
         }
 
         @Override
         public void onDisconnected() {
             L.i("onDisconnected");
+            listening = false;
         }
     }
 

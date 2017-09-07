@@ -19,6 +19,7 @@ import com.giant.watsonapp.introduction.IntroductionActivity;
 import com.giant.watsonapp.map.MapActivity;
 import com.giant.watsonapp.models.MyMarker;
 import com.giant.watsonapp.setting.SettingActivity;
+import com.giant.watsonapp.user.UserActivity;
 import com.giant.watsonapp.utils.DoubleClickExitHelper;
 import com.giant.watsonapp.utils.GlideRoundTransform;
 import com.giant.watsonapp.utils.UiUtils;
@@ -90,9 +91,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @OnClick({R.id.menu_basic, R.id.menu_traffic, R.id.menu_hotel, R.id.menu_food
-            , R.id.menu_specialty, R.id.menu_robot, R.id.spot_title})
+            , R.id.menu_specialty, R.id.menu_robot, R.id.spot_title,R.id.user_iv})
     public void onViewClicked(View view) {
         switch (view.getId()) {
+            case R.id.user_iv:
+                UiUtils.startActivity(this, UserActivity.class);
+                break;
             case R.id.menu_basic:
                 UiUtils.startActivity(this, IntroductionActivity.class);
                 break;

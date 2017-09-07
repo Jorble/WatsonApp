@@ -768,6 +768,9 @@ public class ChatActivity extends TakePhotoActivity implements EasyPermissions.P
             L.i(speechResults.toString());
             if (speechResults.getResults() != null && !speechResults.getResults().isEmpty()) {
                 String text = speechResults.getResults().get(0).getAlternatives().get(0).getTranscript();
+                if(text.contains(" ")){
+                    text = text.trim().replaceAll(" ","");
+                }
                 creatTextMessages(ROLE_MYSELF, text, null);
             } else {
                 creatTextMessages(ROLE_ROBOT, "你有说话吗，我没听清", null);

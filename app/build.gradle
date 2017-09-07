@@ -114,6 +114,7 @@ dependencies {
     compile 'net.qiujuer.genius:kit-cmd:2.0.0'
     compile 'net.qiujuer.genius:kit-handler:2.0.0'
     compile 'net.qiujuer.genius:kit-reflect:2.0.0'
+    compile 'com.klinkerapps:link_builder:1.5.2'
     testCompile 'junit:junit:4.12'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.7.0'
 }

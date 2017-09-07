@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -14,10 +13,7 @@ import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -25,8 +21,6 @@ import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
-import com.baidu.mapapi.CoordType;
-import com.baidu.mapapi.SDKInitializer;
 import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.BitmapDescriptor;
 import com.baidu.mapapi.map.BitmapDescriptorFactory;
@@ -43,7 +37,6 @@ import com.baidu.mapapi.navi.BaiduMapAppNotSupportNaviException;
 import com.baidu.mapapi.navi.BaiduMapNavigation;
 import com.baidu.mapapi.navi.NaviParaOption;
 import com.baidu.mapapi.utils.OpenClientUtil;
-import com.bumptech.glide.Glide;
 import com.giant.watsonapp.R;
 import com.giant.watsonapp.models.Hotel;
 import com.giant.watsonapp.models.HotelDao;
@@ -61,12 +54,6 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import jp.wasabeef.glide.transformations.CropCircleTransformation;
-
-import static android.R.attr.button;
-import static android.R.attr.mode;
-import static com.baidu.location.d.a.i;
-import static com.giant.watsonapp.models.SceneryDao.queryAll;
 
 public class MapActivity extends AppCompatActivity implements SensorEventListener {
 
@@ -484,19 +471,19 @@ public class MapActivity extends AppCompatActivity implements SensorEventListene
      */
     private BitmapDescriptor getBd(int type) {
         BitmapDescriptor bd = BitmapDescriptorFactory
-                .fromResource(R.mipmap.icon_loc_spot);
+                .fromResource(R.mipmap.icon_loc_current);
         switch (type) {
             case TYPE_SCENERY:
                 bd = BitmapDescriptorFactory
-                        .fromResource(R.mipmap.icon_loc_spot);
+                        .fromResource(R.mipmap.icon_loc_current);
                 break;
             case TYPE_FOOD:
                 bd = BitmapDescriptorFactory
-                        .fromResource(R.mipmap.icon_loc_spot);
+                        .fromResource(R.mipmap.icon_loc_current);
                 break;
             case TYPE_HOTEL:
                 bd = BitmapDescriptorFactory
-                        .fromResource(R.mipmap.icon_loc_spot);
+                        .fromResource(R.mipmap.icon_loc_current);
                 break;
         }
         return bd;

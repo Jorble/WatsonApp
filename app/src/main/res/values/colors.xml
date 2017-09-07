@@ -31,6 +31,14 @@
 
     <color name="colorGray">#33000000</color>
 
+    <color name="wall_color1">#F4A7B9</color>
+    <color name="wall_color2">#FB966E</color>
+    <color name="wall_color3">#B5CAA0</color>
+    <color name="wall_color4">#66BAB7</color>
+    <color name="wall_color5">#8F77B5</color>
+    <color name="wall_color6">#91989F</color>
+    <color name="wall_color7">#86C166</color>
+
     <color name="white">#FFFFFF</color><!--白色 -->
     <color name="ivory">#FFFFF0</color><!--象牙色 -->
     <color name="lightyellow">#FFFFE0</color><!--亮黄色 -->

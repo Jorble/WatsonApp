@@ -15,12 +15,15 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.giant.watsonapp.R;
+import com.giant.watsonapp.introduction.IntroductionActivity;
 import com.giant.watsonapp.models.OrderStatus;
 import com.giant.watsonapp.models.Orientation;
 import com.giant.watsonapp.models.Scenery;
 import com.giant.watsonapp.models.SceneryDao;
+import com.giant.watsonapp.route.TravelogActivity;
 import com.giant.watsonapp.setting.TtsSettings;
 import com.giant.watsonapp.utils.L;
+import com.giant.watsonapp.utils.UiUtils;
 import com.iflytek.cloud.ErrorCode;
 import com.iflytek.cloud.InitListener;
 import com.iflytek.cloud.SpeechConstant;
@@ -387,6 +390,7 @@ public class VoiceActivity extends AppCompatActivity {
             case R.id.title_tv:
                 break;
             case R.id.generate_ll:
+                UiUtils.startActivity(this, TravelogActivity.class);
                 break;
             case R.id.empty_rl:
                 beginRefreshing();

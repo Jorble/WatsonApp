@@ -45,7 +45,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:textColor="@color/theme_color"
-            android:textSize="@dimen/text_size2"
+            android:textSize="@dimen/text_size1"
             android:text="一键生成游记"/>
     </LinearLayout>
 

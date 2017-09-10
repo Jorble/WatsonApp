@@ -523,7 +523,7 @@ public class ChatActivity extends TakePhotoActivity implements EasyPermissions.P
 
                 @Override
                 public void onFailure(Exception e) {
-                    String answer = "网络不好，我听不见了你说的话...";
+                    String answer = "网络不好，我听不见你说话了...";
                     creatTextMessages(ROLE_ROBOT, answer, null);
                     L.e(e.toString());
                 }
@@ -579,7 +579,7 @@ public class ChatActivity extends TakePhotoActivity implements EasyPermissions.P
 
                     @Override
                     public void onFailure(Exception e) {
-                        String answer = "网络不好，我听不见了你说的话...";
+                        String answer = "网络不好，我听不见你说话了...";
                         creatTextMessages(ROLE_ROBOT, answer, null);
                         L.e(e.toString());
                         e.printStackTrace();
@@ -829,9 +829,15 @@ public class ChatActivity extends TakePhotoActivity implements EasyPermissions.P
     private void showImg(ArrayList<TImage> images) {
         for (TImage img : images) {
 //            L.i("getCompressPath="+img.getCompressPath());//压缩后的路径
-            L.i("getOriginalPath=" + img.getOriginalPath());//源文件路径
+//            L.i("getOriginalPath=" + img.getOriginalPath());//源文件路径
 //            L.i("getFromType="+img.getFromType());
-            creatPhotoMessages(ROLE_MYSELF, img.getOriginalPath());
+
+            //如果源文件路径为空，则选择压缩后路径。源路径优先.
+            if(TextUtils.isEmpty(img.getOriginalPath())) {
+                creatPhotoMessages(ROLE_MYSELF, img.getCompressPath());
+            }else {
+                creatPhotoMessages(ROLE_MYSELF, img.getOriginalPath());
+            }
         }
     }
 

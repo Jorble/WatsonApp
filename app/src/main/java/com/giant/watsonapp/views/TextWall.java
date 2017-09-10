@@ -87,12 +87,9 @@ public class TextWall extends FrameLayout implements ViewTreeObserver.OnGlobalLa
             textView.setText(items.get(i).getValue());
             textView.setTextSize(items.get(i).getFrontSize());
             textView.setTextColor(context.getResources().getColor(items.get(i).getFrontColor()));
-            int b = random.nextInt(2);
-            if (b == 1) {
-                textView.setSingleLine(true);
-            } else {
-                textView.setEms(1);
-            }
+            int b = random.nextInt(7);//marginTop分布系数，越小越居中
+            textView.setSingleLine(true);//横向排列
+//            textView.setEms(1);//纵向排列
             textView.setGravity(View.TEXT_ALIGNMENT_CENTER);
             textView.setTag(items.get(i));
             textView.setOnClickListener(new OnClickListener() {

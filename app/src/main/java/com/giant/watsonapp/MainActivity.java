@@ -18,6 +18,7 @@ import com.giant.watsonapp.hotel.HotelActivity;
 import com.giant.watsonapp.introduction.IntroductionActivity;
 import com.giant.watsonapp.map.MapActivity;
 import com.giant.watsonapp.models.MyMarker;
+import com.giant.watsonapp.route.RouteActivity;
 import com.giant.watsonapp.setting.SettingActivity;
 import com.giant.watsonapp.user.UserActivity;
 import com.giant.watsonapp.utils.DoubleClickExitHelper;
@@ -110,7 +111,7 @@ public class MainActivity extends AppCompatActivity {
                 UiUtils.startActivity(this, RestaurantActivity.class);
                 break;
             case R.id.menu_specialty:
-                UiUtils.startActivity(this, VoiceActivity.class);
+                UiUtils.startActivity(this, RouteActivity.class);
                 break;
             case R.id.menu_robot:
                 UiUtils.startActivity(this, ChatActivity.class);

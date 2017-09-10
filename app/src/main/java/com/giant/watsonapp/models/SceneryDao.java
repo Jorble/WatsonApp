@@ -16,11 +16,13 @@ import java.util.List;
 
 public class SceneryDao {
 
-    private static final String QUERY_ALL = "SELECT * FROM scenery LIMIT 0,10";
+    private static final String QUERY_ALL = "SELECT * FROM scenery ORDER BY CONVERT(id,UNSIGNED) LIMIT 0,10";
 
     private static final String FIELD_ID = "id";
     private static final String FIELD_TITLE = "title";
     private static final String FIELD_MSG = "message";
+    private static final String FIELD_DAY = "day";
+    private static final String FIELD_PLAN = "plan";
     private static final String FIELD_IMG = "img";
     private static final String FIELD_URL = "url";
     private static final String FIELD_LAT = "lat";
@@ -51,6 +53,8 @@ public class SceneryDao {
                         bean.setLat(hashMap.get(FIELD_LAT).toString());
                         bean.setLon(hashMap.get(FIELD_LON).toString());
                         bean.setMessage(hashMap.get(FIELD_MSG).toString());
+                        bean.setDay(hashMap.get(FIELD_DAY).toString());
+                        bean.setPlan(hashMap.get(FIELD_PLAN).toString());
                         bean.setTitle(hashMap.get(FIELD_TITLE).toString());
                         bean.setUrl(hashMap.get(FIELD_URL).toString());
                         mDatas.add(bean);

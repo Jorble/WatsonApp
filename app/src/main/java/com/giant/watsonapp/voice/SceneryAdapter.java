@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.os.Message;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
+import android.text.Spanned;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -51,7 +53,7 @@ public class SceneryAdapter extends RecyclerView.Adapter<SceneryViewHolder> {
 
     @Override
     public int getItemViewType(int position) {
-        return TimelineView.getTimeLineViewType(position,getItemCount());
+        return TimelineView.getTimeLineViewType(position, getItemCount());
     }
 
     @Override
@@ -60,11 +62,7 @@ public class SceneryAdapter extends RecyclerView.Adapter<SceneryViewHolder> {
         mLayoutInflater = LayoutInflater.from(mContext);
         View view;
 
-        if(mOrientation == Orientation.HORIZONTAL) {
-            view = mLayoutInflater.inflate(mWithLinePadding ? R.layout.item_timeline_horizontal_line_padding : R.layout.item_timeline_horizontal, parent, false);
-        } else {
-            view = mLayoutInflater.inflate(mWithLinePadding ? R.layout.item_timeline_line_padding : R.layout.item_scenery, parent, false);
-        }
+        view = mLayoutInflater.inflate(R.layout.item_scenery, parent, false);
 
         return new SceneryViewHolder(view, viewType);
     }
@@ -74,21 +72,40 @@ public class SceneryAdapter extends RecyclerView.Adapter<SceneryViewHolder> {
 
         Scenery timeLineModel = mDatas.get(position);
 
-        if(timeLineModel.getStatus() == OrderStatus.INACTIVE) {
+        if (TextUtils.isEmpty(timeLineModel.getDay()) && TextUtils.isEmpty(timeLineModel.getPlan())) {
+            holder.head.setVisibility(View.GONE);
+        }
+
+        if (timeLineModel.getStatus() == OrderStatus.INACTIVE) {
             holder.mTimelineView.setMarker(VectorDrawableUtils.getDrawable(mContext, R.drawable.ic_marker_inactive, R.color.theme_color));
-        } else if(timeLineModel.getStatus() == OrderStatus.ACTIVE) {
+        } else if (timeLineModel.getStatus() == OrderStatus.ACTIVE) {
             holder.mTimelineView.setMarker(VectorDrawableUtils.getDrawable(mContext, R.drawable.ic_marker_active, R.color.theme_color));
         } else {
             holder.mTimelineView.setMarker(ContextCompat.getDrawable(mContext, R.drawable.ic_marker), ContextCompat.getColor(mContext, R.color.theme_color));
         }
 
+        if (TextUtils.isEmpty(timeLineModel.getDay())) {
+            holder.day.setVisibility(View.GONE);
+        } else {
+            holder.day.setText(timeLineModel.getDay());
+        }
+
+        String plan = timeLineModel.getPlan();
+
+        if (TextUtils.isEmpty(plan)) {
+            holder.plan.setVisibility(View.GONE);
+        } else {
+            Spanned spanned = Html.fromHtml(plan, null, null);
+            holder.plan.setText(spanned);
+        }
+
         holder.title.setText(timeLineModel.getTitle());
         holder.message.setText(timeLineModel.getMessage());
 
-        if(timeLineModel.isPlaying()){
+        if (timeLineModel.isPlaying()) {
             holder.play.setImageResource(R.mipmap.icon_voice_stop);
             holder.message.setExpand(true);//展开文字
-        }else {
+        } else {
             holder.play.setImageResource(R.mipmap.icon_voice_play);
             holder.message.setExpand(false);//折叠文字
         }
@@ -102,9 +119,9 @@ public class SceneryAdapter extends RecyclerView.Adapter<SceneryViewHolder> {
                 .into(holder.img);
 
         //点击事件
-        holder.img.setOnClickListener((View view)->{
-            if(TextUtils.isEmpty(timeLineModel.getUrl())){
-                T.showShort(mContext,"没有更多详情了");
+        holder.img.setOnClickListener((View view) -> {
+            if (TextUtils.isEmpty(timeLineModel.getUrl())) {
+                T.showShort(mContext, "没有更多详情了");
                 return;
             }
             Intent intent = new Intent(mContext, WebActivity.class);
@@ -112,43 +129,43 @@ public class SceneryAdapter extends RecyclerView.Adapter<SceneryViewHolder> {
             mContext.startActivity(intent);
         });
 
-        holder.readMap.setOnClickListener((View view)->{
-            if(TextUtils.isEmpty(timeLineModel.getLat()) || TextUtils.isEmpty(timeLineModel.getLon())){
-                T.showShort(mContext,"暂无地图信息");
+        holder.readMap.setOnClickListener((View view) -> {
+            if (TextUtils.isEmpty(timeLineModel.getLat()) || TextUtils.isEmpty(timeLineModel.getLon())) {
+                T.showShort(mContext, "暂无地图信息");
                 return;
             }
-            MyMarker myMarker=new MyMarker();
+            MyMarker myMarker = new MyMarker();
             myMarker.setType(TYPE_SCENERY);
             myMarker.setImg(timeLineModel.getImg());
             myMarker.setName(timeLineModel.getTitle());
             myMarker.setLat(timeLineModel.getLat());
             myMarker.setLon(timeLineModel.getLon());
-            MapActivity.startMyself(mContext,myMarker);
+            MapActivity.startMyself(mContext, myMarker);
         });
 
-        holder.play.setOnClickListener((View view)->{
+        holder.play.setOnClickListener((View view) -> {
             //停止播放中的item
-            for(int i=0;i<mDatas.size();i++){
-                if(mDatas.get(i).isPlaying() && i != position){
+            for (int i = 0; i < mDatas.size(); i++) {
+                if (mDatas.get(i).isPlaying() && i != position) {
                     mDatas.get(i).setPlaying(false);
                     notifyItemChanged(i);
                 }
             }
 
             //播放当前item
-            if(timeLineModel.isPlaying()){
+            if (timeLineModel.isPlaying()) {
                 L.i("点击了停止");
                 timeLineModel.setPlaying(false);
-                Message message=new Message();
+                Message message = new Message();
                 message.what = Const.BUS_VOICE_STOP;
                 message.obj = timeLineModel;
                 message.arg1 = position;
                 EventBus.getDefault().post(message);
-            }else {
+            } else {
                 L.i("点击了播放");
                 timeLineModel.setStatus(OrderStatus.ACTIVE);
                 timeLineModel.setPlaying(true);
-                Message message=new Message();
+                Message message = new Message();
                 message.what = Const.BUS_VOICE_PLAY;
                 message.obj = timeLineModel;
                 message.arg1 = position;
@@ -162,7 +179,7 @@ public class SceneryAdapter extends RecyclerView.Adapter<SceneryViewHolder> {
 
     @Override
     public int getItemCount() {
-        return (mDatas!=null? mDatas.size():0);
+        return (mDatas != null ? mDatas.size() : 0);
     }
 
     /**

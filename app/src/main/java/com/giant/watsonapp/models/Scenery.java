@@ -10,12 +10,30 @@ public class Scenery implements Serializable{
     private String id;
     private String title;
     private String message;
+    private String day;
+    private String plan;
     private String img;
     private String url;
     private String lat;
     private String lon;
     private OrderStatus status;
     private boolean isPlaying;
+
+    public String getDay() {
+        return day;
+    }
+
+    public void setDay(String day) {
+        this.day = day;
+    }
+
+    public String getPlan() {
+        return plan;
+    }
+
+    public void setPlan(String plan) {
+        this.plan = plan;
+    }
 
     public String getId() {
         return id;

@@ -1,5 +1,6 @@
 package com.giant.watsonapp.voice;
 
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
@@ -17,10 +18,16 @@ import butterknife.ButterKnife;
  */
 public class SceneryViewHolder extends RecyclerView.ViewHolder {
 
+    @BindView(R.id.head_cv)
+    CardView head;
     @BindView(R.id.img_iv)
     ImageView img;
     @BindView(R.id.title_tv)
     TextView title;
+    @BindView(R.id.day_tv)
+    TextView day;
+    @BindView(R.id.plan_tv)
+    TextView plan;
     @BindView(R.id.message_tv)
     MoreTextView message;
     @BindView(R.id.play_iv)

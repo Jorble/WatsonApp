@@ -5,29 +5,9 @@ package com.giant.watsonapp;
  */
 
 public class Const {
-    /**
-     * MySQL
-     */
-    public static final String MYSQL_URL_KEY="MYSQL_URL_KEY";
-    public static final String MYSQL_USER_KEY="MYSQL_USER_KEY";
-    public static final String MYSQL_PWD_KEY="MYSQL_PWD_KEY";
-    public static final String MYSQL_DRIVER_KEY="MYSQL_DRIVER_KEY";
-
-    public static final String MYSQL_URL_DEFAULT="jdbc:mysql://183.62.42.146:24406/watson_app";
-    public static final String MYSQL_USER_DEFAULT="root";
-    public static final String MYSQL_PWD_DEFAULT="";
-    public static final String MYSQL_DRIVER_DEFAULT="com.mysql.jdbc.Driver";
-
-    public static final String MYSQL_QUERY_ALL="SELECT id, content, img, url FROM conversation";
-    public static final String MYSQL_QUERY_WHERE="SELECT id, content, img, url FROM conversation where ";
-    public static final String MYSQL_FIELD_ID="id";
-    public static final String MYSQL_FIELD_CONTENT="content";
-    public static final String MYSQL_FIELD_DETAIL="detail";
-    public static final String MYSQL_FIELD_IMG="img";
-    public static final String MYSQL_FIELD_URL="url";
 
     /**
-     * watson翻译
+     * watson 翻译
      */
     public static final String WATSON_TRANS_USER_KEY="WATSON_TRANS_USER_KEY";
     public static final String WATSON_TRANS_PWD_KEY="WATSON_TRANS_PWD_KEY";
@@ -84,4 +64,18 @@ public class Const {
      */
     public static final int BUS_VOICE_PLAY=0;
     public static final int BUS_VOICE_STOP=1;
+
+    /**
+     * MySQL
+     */
+    public static final String MYSQL_URL_KEY="MYSQL_URL_KEY";
+    public static final String MYSQL_USER_KEY="MYSQL_USER_KEY";
+    public static final String MYSQL_PWD_KEY="MYSQL_PWD_KEY";
+    public static final String MYSQL_DRIVER_KEY="MYSQL_DRIVER_KEY";
+
+    public static final String MYSQL_URL_DEFAULT="jdbc:mysql://183.62.42.146:24406/watson_app";
+    public static final String MYSQL_USER_DEFAULT="root";
+    public static final String MYSQL_PWD_DEFAULT="";
+    public static final String MYSQL_DRIVER_DEFAULT="com.mysql.jdbc.Driver";
+
 }

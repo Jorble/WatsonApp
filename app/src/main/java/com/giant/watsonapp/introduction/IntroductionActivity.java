@@ -59,7 +59,7 @@ public class IntroductionActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         StatusBarUtil.setTransparent(this);
         context = this;
-        titleTv.setText("概况");
+        titleTv.setText("推荐");
 
         initRv();
 

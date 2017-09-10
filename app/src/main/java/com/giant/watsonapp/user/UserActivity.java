@@ -5,17 +5,12 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.giant.watsonapp.MainActivity;
 import com.giant.watsonapp.R;
-import com.giant.watsonapp.hotel.HotelAdapter;
-import com.giant.watsonapp.models.Hotel;
-import com.giant.watsonapp.utils.L;
 import com.giant.watsonapp.views.TextItem;
 import com.giant.watsonapp.views.TextWall;
 import com.jaeger.library.StatusBarUtil;
@@ -71,11 +66,6 @@ public class UserActivity extends AppCompatActivity {
         initRv();
 
         initTextWall();
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
     }
 
     private void initData(){

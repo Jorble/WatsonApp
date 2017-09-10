@@ -17,80 +17,151 @@
         app:lineSize="3dp"
         app:line="@color/theme_color"/>
 
-    <android.support.v7.widget.CardView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:layout_marginBottom="15dp"
-        android:layout_marginLeft="10dp"
-        android:layout_gravity="center_vertical"
-        app:cardElevation="1dp"
-        app:contentPadding="15dp"
-        app:cardCornerRadius="10dp">
+        android:orientation="vertical">
 
-        <LinearLayout
+        <android.support.v7.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:orientation="vertical">
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="15dp"
+            android:layout_marginLeft="10dp"
+            android:layout_gravity="center_vertical"
+            app:cardElevation="1dp"
+            app:contentPadding="15dp"
+            app:cardCornerRadius="10dp"
+            android:id="@+id/head_cv">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center_vertical">
-                <ImageView
-                    android:id="@+id/img_iv"
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:src="@mipmap/pic_spot_default"/>
-                <android.support.v7.widget.AppCompatTextView
-                    android:layout_weight="1"
-                    android:layout_width="0dp"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:id="@+id/title_tv"
-                    android:textSize="@dimen/text_size1"
-                    android:textStyle="bold"
-                    android:text="title"
-                    android:textColor="@color/text_black1"/>
-                <ImageView
-                    android:id="@+id/play_iv"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:src="@mipmap/icon_voice_play"/>
+                    android:orientation="vertical">
+                    <android.support.v7.widget.AppCompatTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:id="@+id/day_tv"
+                        android:lineSpacingExtra="2dp"
+                        android:lineSpacingMultiplier="1.2"
+                        android:textSize="@dimen/text_size1"
+                        android:textStyle="bold"
+                        android:text="D1 前往国际旅游岛三亚市"
+                        android:textColor="@color/text_black1"/>
+                    <android.support.v7.widget.AppCompatTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:id="@+id/plan_tv"
+                        android:textSize="@dimen/text_size2"
+                        android:text="上午乘坐公交前往亚龙湾热带天堂森林公园，去看看《非诚勿扰II》中那些熟悉的场景，中午可在这里挑一家景观餐厅，在欣赏美景的同时享受美味。下午去亚龙湾海滩晒晒太阳、吹吹海风，随心所欲地感受海滨风情。"
+                        android:textColor="@color/text_black2"/>
+                </LinearLayout>
+
             </LinearLayout>
 
-            <com.giant.watsonapp.views.MoreTextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:id="@+id/message_tv"
-                more:expand="false"
-                more:maxLine="3"
-                more:mytextColor="@color/text_black2"
-                more:mytextSize="@dimen/text_size2"
-                more:text="message" />
+        </android.support.v7.widget.CardView>
 
-            <include layout="@layout/divider_h"/>
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="15dp"
+            android:layout_marginLeft="10dp"
+            android:layout_gravity="center_vertical"
+            app:cardElevation="1dp"
+            app:contentPadding="15dp"
+            app:cardCornerRadius="10dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:gravity="center">
-                <TextView
-                    android:id="@+id/readMap_tv"
-                    android:layout_width="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/theme_color"
-                    android:textSize="@dimen/text_size2"
-                    android:text="查看地图"/>
+                    android:gravity="center_vertical">
+                    <ImageView
+                        android:id="@+id/img_iv"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:src="@mipmap/pic_spot_default"/>
+                    <android.support.v7.widget.AppCompatTextView
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:id="@+id/title_tv"
+                        android:lineSpacingExtra="2dp"
+                        android:lineSpacingMultiplier="1.2"
+                        android:textSize="@dimen/text_size2"
+                        android:textStyle="bold"
+                        android:text="蜈支洲岛"
+                        android:textColor="@color/text_black2"/>
+                    <ImageView
+                        android:id="@+id/play_iv"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:src="@mipmap/icon_voice_play"/>
+                </LinearLayout>
+
+                <com.giant.watsonapp.views.MoreTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:id="@+id/message_tv"
+                    android:lineSpacingExtra="2dp"
+                    android:lineSpacingMultiplier="1.2"
+                    more:expand="false"
+                    more:maxLine="3"
+                    more:mytextColor="@color/text_black2"
+                    more:mytextSize="@dimen/text_size2"
+                    more:text="message" />
+
+                <include layout="@layout/divider_h"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:gravity="center">
+                    <TextView
+                        android:id="@+id/takePic_tv"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:textColor="@color/theme_color"
+                        android:textSize="@dimen/text_size2"
+                        android:text="拍照签到"/>
+                    <TextView
+                        android:id="@+id/readMap_tv"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:textColor="@color/theme_color"
+                        android:textSize="@dimen/text_size2"
+                        android:text="查看地图"/>
+                </LinearLayout>
+
             </LinearLayout>
 
-        </LinearLayout>
-
-    </android.support.v7.widget.CardView>
+        </android.support.v7.widget.CardView>
+    </LinearLayout>
 
 </LinearLayout>

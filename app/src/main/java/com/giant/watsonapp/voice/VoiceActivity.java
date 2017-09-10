@@ -105,7 +105,7 @@ public class VoiceActivity extends AppCompatActivity {
         StatusBarUtil.setTransparent(this);
         context = this;
 
-        titleTv.setText("语音导游");
+        titleTv.setText("路线详情");
 
         //设置排列方式
         recyclerView.setLayoutManager(getLinearLayoutManager());
@@ -378,13 +378,15 @@ public class VoiceActivity extends AppCompatActivity {
         super.onPause();
     }
 
-    @OnClick({R.id.back_iv, R.id.title_tv, R.id.empty_rl, R.id.error_rl})
+    @OnClick({R.id.back_iv, R.id.title_tv, R.id.empty_rl, R.id.error_rl,R.id.generate_ll})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.back_iv:
                 finish();
                 break;
             case R.id.title_tv:
+                break;
+            case R.id.generate_ll:
                 break;
             case R.id.empty_rl:
                 beginRefreshing();

@@ -163,6 +163,32 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginBottom="10dp">
+
+            <RelativeLayout
+                android:id="@+id/photo_input_takephoto"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:gravity="center">
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center">
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@mipmap/input_take_photo"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="3dp"
+                        android:text="拍照"
+                        android:textSize="@dimen/text_size1"
+                        android:textColor="@color/white"/>
+                </LinearLayout>
+            </RelativeLayout>
+
             <RelativeLayout
                 android:id="@+id/photo_input_gallery"
                 android:layout_weight="1"
@@ -189,30 +215,6 @@
                 </LinearLayout>
             </RelativeLayout>
 
-            <RelativeLayout
-                android:id="@+id/photo_input_takephoto"
-                android:layout_weight="1"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:gravity="center">
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:gravity="center">
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@mipmap/input_take_photo"/>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="3dp"
-                        android:text="拍照"
-                        android:textSize="@dimen/text_size1"
-                        android:textColor="@color/white"/>
-                </LinearLayout>
-            </RelativeLayout>
         </LinearLayout>
 
     </LinearLayout>

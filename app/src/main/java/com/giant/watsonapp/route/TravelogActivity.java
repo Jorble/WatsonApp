@@ -59,6 +59,8 @@ public class TravelogActivity extends AppCompatActivity {
         webSettings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
         webSettings.setLoadWithOverviewMode(true);
         webSettings.setUseWideViewPort(true);
+        webView.setHorizontalScrollBarEnabled(false);//水平不显示
+        webView.setVerticalScrollBarEnabled(false); //垂直不显示
 
         webView.setBackgroundColor(Color.TRANSPARENT);
         webView.loadUrl(uri);

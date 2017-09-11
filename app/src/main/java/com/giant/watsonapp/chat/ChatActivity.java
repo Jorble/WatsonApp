@@ -38,8 +38,10 @@ import com.giant.watsonapp.utils.JdbcHelper;
 import com.giant.watsonapp.utils.KeyBoardUtils;
 import com.giant.watsonapp.utils.L;
 import com.giant.watsonapp.utils.T;
+import com.giant.watsonapp.utils.UiUtils;
 import com.giant.watsonapp.views.ChatView;
 import com.giant.watsonapp.views.CircularRippleButton;
+import com.giant.watsonapp.voice.VoiceActivity;
 import com.giant.watsonapp.watson.WatsonServiceManager;
 import com.giant.watsonapp.web.WebActivity;
 import com.github.florent37.viewanimator.ViewAnimator;
@@ -312,7 +314,7 @@ public class ChatActivity extends TakePhotoActivity implements EasyPermissions.P
      * @param text
      * @return
      */
-    private void creatTextMessages(String role, String text, String url) {
+    private void creatTextMessages(String role, String text, String convId) {
         final MyMessage message;
         if (TextUtils.isEmpty(text)) return;//如果消息为空，直接返回
         switch (role) {
@@ -320,7 +322,7 @@ public class ChatActivity extends TakePhotoActivity implements EasyPermissions.P
                 message = new MyMessage(text, IMessage.MessageType.RECEIVE_TEXT);
                 message.setUserInfo(new DefaultUser(role, "robot", "R.mipmap.avatar_robot"));
                 //返回含有convId
-                if (!TextUtils.isEmpty(url)) message.setConvId(url);
+                if (!TextUtils.isEmpty(convId)) message.setConvId(convId);
                 break;
             case ROLE_MYSELF:
                 message = new MyMessage(text, IMessage.MessageType.SEND_TEXT);
@@ -400,7 +402,6 @@ public class ChatActivity extends TakePhotoActivity implements EasyPermissions.P
                 // You can use other image load libraries.
                 Glide.with(getApplicationContext())
                         .load(string)
-                        .fitCenter()
                         .placeholder(R.drawable.aurora_picture_not_found)
                         .override(800, Target.SIZE_ORIGINAL)
                         .into(imageView);
@@ -428,6 +429,7 @@ public class ChatActivity extends TakePhotoActivity implements EasyPermissions.P
                 } else if (message.getType() == IMessage.MessageType.RECEIVE_TEXT
                         && !TextUtils.isEmpty(message.getConvId())) {//文本跳转到DetailActivity
 
+                    //相关介绍
                     ConversationDao.queryById(message.getConvId(), new ConversationDao.DbCallBack() {
                         @Override
                         public void onSuccess(List<Conversation> datas) {
@@ -446,6 +448,11 @@ public class ChatActivity extends TakePhotoActivity implements EasyPermissions.P
 
                         }
                     });
+                } else if (message.getType() == IMessage.MessageType.RECEIVE_TEXT
+                        && message.getText().contains("三亚全景5日游")) {//文本跳转到VoiceActivity
+
+                    //路线规划
+                    UiUtils.startActivity((Activity) context, VoiceActivity.class);
                 }
             }
         });

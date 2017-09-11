@@ -81,6 +81,7 @@ public class UserActivity extends AppCompatActivity {
         mDatas.add("2017年8月3日询问了机器人关于海边游玩景点");
 
         highLightList.add("三亚");
+        highLightList.add("游记");
         highLightList.add("优惠");
         highLightList.add("亚龙湾");
         highLightList.add("广州");

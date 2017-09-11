@@ -70,7 +70,7 @@ public class UserActivity extends AppCompatActivity {
 
     private void initData(){
         mDatas.add("2017年9月15日查看了三亚优惠活动");
-        mDatas.add("2017年9月11日评价了亚龙湾五星好评");
+        mDatas.add("2017年9月11日分享了《三亚游记》到朋友圈");
         mDatas.add("2017年9月7日在三亚游览了亚龙湾景点");
         mDatas.add("2017年9月5日使用了地图导航从广州到三亚");
         mDatas.add("2017年9月4日预订了海韵度假酒店海景房");

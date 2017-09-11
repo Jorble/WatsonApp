@@ -53,6 +53,10 @@ public class TravelogActivity extends AppCompatActivity {
     private void readHtmlFormAssets(){
         WebSettings webSettings = webView.getSettings();
 
+        webSettings.setJavaScriptEnabled(false);
+        webSettings.setSupportZoom(false);
+        webSettings.setBuiltInZoomControls(false);
+        webSettings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
         webSettings.setLoadWithOverviewMode(true);
         webSettings.setUseWideViewPort(true);
 

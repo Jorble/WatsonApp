@@ -1,6 +1,7 @@
 package com.giant.watsonapp.route;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -13,6 +14,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.giant.watsonapp.R;
+import com.giant.watsonapp.map.MapActivity;
 import com.jaeger.library.StatusBarUtil;
 
 import butterknife.BindView;
@@ -44,6 +46,7 @@ public class TravelogActivity extends AppCompatActivity {
         context = this;
         titleTv.setText("游记");
 
+        uri = (String)getIntent().getCharSequenceExtra("uri");
         readHtmlFormAssets();
     }
 
@@ -77,5 +80,19 @@ public class TravelogActivity extends AppCompatActivity {
             case R.id.share_bt:
                 break;
         }
+    }
+
+    /**
+     * 根据传入标注信息并启动自身
+     */
+    public static void startMyself(Context context, String uri) {
+        if (uri == null)return;
+
+        Intent intent = new Intent();
+        intent.setClass(context, TravelogActivity.class);
+        Bundle mBundle = new Bundle();
+        mBundle.putCharSequence("uri", uri);
+        intent.putExtras(mBundle);
+        context.startActivity(intent);
     }
 }

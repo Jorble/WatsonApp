@@ -164,6 +164,9 @@
         <activity android:name=".route.TravelogActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />
+        <activity android:name=".route.SceneNavActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

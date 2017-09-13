@@ -34,6 +34,7 @@ import com.giant.watsonapp.models.DefaultUser;
 import com.giant.watsonapp.models.MyMessage;
 import com.giant.watsonapp.photo.CustomHelper;
 import com.giant.watsonapp.photo.PhotoViewPop;
+import com.giant.watsonapp.route.TravelogActivity;
 import com.giant.watsonapp.utils.JdbcHelper;
 import com.giant.watsonapp.utils.KeyBoardUtils;
 import com.giant.watsonapp.utils.L;
@@ -261,6 +262,12 @@ public class ChatActivity extends TakePhotoActivity implements EasyPermissions.P
     protected void onPostResume() {
         super.onPostResume();
         requestPermissions();//请求权限
+
+        //直接打开景点图像识别
+        boolean openTakePic=getIntent().getBooleanExtra("take",false);
+        if(openTakePic){
+            showPhotoInput();
+        }
     }
 
     @Override
@@ -814,6 +821,7 @@ public class ChatActivity extends TakePhotoActivity implements EasyPermissions.P
     public void takeCancel() {
         super.takeCancel();
         L.i("takeCancel");
+        showChatInput();
     }
 
     @Override
@@ -848,4 +856,16 @@ public class ChatActivity extends TakePhotoActivity implements EasyPermissions.P
         }
     }
 
+    /**
+     * 根据传入标注信息并启动自身
+     */
+    public static void startMyself(Context context, boolean openTake) {
+
+        Intent intent = new Intent();
+        intent.setClass(context, ChatActivity.class);
+        Bundle mBundle = new Bundle();
+        mBundle.putBoolean("take", openTake);
+        intent.putExtras(mBundle);
+        context.startActivity(intent);
+    }
 }

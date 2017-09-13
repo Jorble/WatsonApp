@@ -36,6 +36,8 @@ public class SceneryViewHolder extends RecyclerView.ViewHolder {
     TimelineView mTimelineView;
     @BindView(R.id.readMap_tv)
     TextView readMap;
+    @BindView(R.id.takePic_tv)
+    TextView takePic;
 
     public SceneryViewHolder(View itemView, int viewType) {
         super(itemView);

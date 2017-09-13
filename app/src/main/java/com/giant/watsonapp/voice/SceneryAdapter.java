@@ -15,13 +15,16 @@ import android.view.ViewGroup;
 import com.bumptech.glide.Glide;
 import com.giant.watsonapp.Const;
 import com.giant.watsonapp.R;
+import com.giant.watsonapp.chat.ChatActivity;
 import com.giant.watsonapp.map.MapActivity;
 import com.giant.watsonapp.models.MyMarker;
 import com.giant.watsonapp.models.OrderStatus;
 import com.giant.watsonapp.models.Orientation;
 import com.giant.watsonapp.models.Scenery;
+import com.giant.watsonapp.route.SceneNavActivity;
 import com.giant.watsonapp.utils.L;
 import com.giant.watsonapp.utils.T;
+import com.giant.watsonapp.utils.UiUtils;
 import com.giant.watsonapp.utils.VectorDrawableUtils;
 import com.giant.watsonapp.web.WebActivity;
 import com.github.vipulasri.timelineview.TimelineView;
@@ -129,18 +132,24 @@ public class SceneryAdapter extends RecyclerView.Adapter<SceneryViewHolder> {
             mContext.startActivity(intent);
         });
 
+        holder.takePic.setOnClickListener((View view) -> {
+            ChatActivity.startMyself(mContext,true);
+        });
+
         holder.readMap.setOnClickListener((View view) -> {
-            if (TextUtils.isEmpty(timeLineModel.getLat()) || TextUtils.isEmpty(timeLineModel.getLon())) {
-                T.showShort(mContext, "暂无地图信息");
-                return;
-            }
-            MyMarker myMarker = new MyMarker();
-            myMarker.setType(TYPE_SCENERY);
-            myMarker.setImg(timeLineModel.getImg());
-            myMarker.setName(timeLineModel.getTitle());
-            myMarker.setLat(timeLineModel.getLat());
-            myMarker.setLon(timeLineModel.getLon());
-            MapActivity.startMyself(mContext, myMarker);
+            Intent intent = new Intent(mContext, SceneNavActivity.class);
+            mContext.startActivity(intent);
+//            if (TextUtils.isEmpty(timeLineModel.getLat()) || TextUtils.isEmpty(timeLineModel.getLon())) {
+//                T.showShort(mContext, "暂无地图信息");
+//                return;
+//            }
+//            MyMarker myMarker = new MyMarker();
+//            myMarker.setType(TYPE_SCENERY);
+//            myMarker.setImg(timeLineModel.getImg());
+//            myMarker.setName(timeLineModel.getTitle());
+//            myMarker.setLat(timeLineModel.getLat());
+//            myMarker.setLon(timeLineModel.getLon());
+//            MapActivity.startMyself(mContext, myMarker);
         });
 
         holder.play.setOnClickListener((View view) -> {

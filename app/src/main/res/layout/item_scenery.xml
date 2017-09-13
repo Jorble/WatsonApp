@@ -156,7 +156,7 @@
                         android:gravity="center"
                         android:textColor="@color/theme_color"
                         android:textSize="@dimen/text_size2"
-                        android:text="查看地图"/>
+                        android:text="在线导游"/>
                 </LinearLayout>
 
             </LinearLayout>

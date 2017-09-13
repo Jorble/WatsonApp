@@ -26,6 +26,11 @@ android {
         versionName "2.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
+
+        //Nuance自动生成的库文件夹中没有我们所需的so文件，所以按照上面的逻辑，
+        //就应该是阻止自动生成我们不需要的文件夹或者下载相关的so文件放到对应的文件夹下面。
+        //加入需要生成的文件夹//armeabi，armeabi-v7a，x86，mips，arm64-v8a，mips64，x86_64
+        ndk { abiFilters "armeabi", "armeabi-v7a", "arm64-v8a","x86","x86_64" }// 其他忽略
     }
     buildTypes {
         debug {

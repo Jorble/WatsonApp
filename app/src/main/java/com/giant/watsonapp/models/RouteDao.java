@@ -16,7 +16,7 @@ import java.util.List;
 
 public class RouteDao {
 
-    private static final String QUERY_ALL = "SELECT * FROM route LIMIT 0,10";
+    private static final String QUERY_ALL = "SELECT * FROM route ORDER BY CONVERT(id,UNSIGNED) LIMIT 0,10";
 
     private static final String FIELD_ID = "id";
     private static final String FIELD_TITLE = "title";

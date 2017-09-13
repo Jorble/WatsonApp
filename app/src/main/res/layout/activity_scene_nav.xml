@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/shape_bg"
+    android:orientation="vertical">
+
+    <include layout="@layout/bar_title" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+                android:scaleType="fitXY"
+                android:src="@mipmap/pic_dt_wuzhizhou" />
+
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                app:cardCornerRadius="10dp"
+                app:cardElevation="1dp"
+                app:contentPadding="15dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical">
+
+                        <ImageView
+                            android:id="@+id/img_iv"
+                            android:layout_width="60dp"
+                            android:layout_height="60dp"
+                            android:src="@mipmap/sanya05" />
+
+                        <android.support.v7.widget.AppCompatTextView
+                            android:id="@+id/name_tv"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:layout_weight="1"
+                            android:lineSpacingExtra="2dp"
+                            android:lineSpacingMultiplier="1.2"
+                            android:text="观海长廊"
+                            android:textColor="@color/text_black2"
+                            android:textSize="@dimen/text_size2"
+                            android:textStyle="bold" />
+
+                        <ImageView
+                            android:id="@+id/play_iv"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:src="@mipmap/icon_voice_play" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/message_tv"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dp"
+                        android:layout_marginTop="5dp"
+                        android:lineSpacingExtra="2dp"
+                        android:lineSpacingMultiplier="1.2"
+                        android:text="在蜈支洲岛西侧，沿海边地形修建了木质走廊和平台，可以沿着走廊观看蜈支洲岛清澈的海水，这一带因为礁石比较多，所以可以看到很螃蟹在礁石上“行走”，如果运气好，在平台上还可以看到成群的热带鱼 。"
+                        android:textColor="@color/text_black2"
+                        android:textSize="@dimen/text_size2" />
+
+                    <include layout="@layout/divider_h" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="15dp"
+                        android:gravity="center">
+
+                        <TextView
+                            android:id="@+id/takePic_tv"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="拍照签到"
+                            android:textColor="@color/theme_color"
+                            android:textSize="@dimen/text_size2" />
+
+                        <TextView
+                            android:id="@+id/generate_tv"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="生成游记"
+                            android:textColor="@color/theme_color"
+                            android:textSize="@dimen/text_size2" />
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
+
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

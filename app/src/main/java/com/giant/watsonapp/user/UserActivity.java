@@ -2,20 +2,27 @@ package com.giant.watsonapp.user;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.giant.watsonapp.R;
+import com.giant.watsonapp.models.User;
+import com.giant.watsonapp.models.UserDao;
 import com.giant.watsonapp.views.TextItem;
 import com.giant.watsonapp.views.TextWall;
 import com.jaeger.library.StatusBarUtil;
+import com.race604.drawable.wave.WaveDrawable;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import butterknife.BindView;
@@ -39,15 +46,24 @@ public class UserActivity extends AppCompatActivity {
     TextWall userTw;
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
+    @BindView(R.id.score_tv)
+    TextView scoreTv;
+    @BindView(R.id.loadView)
+    ImageView loadView;
+    @BindView(R.id.loading_rl)
+    RelativeLayout loadingRl;
+    @BindView(R.id.empty_iv)
+    ImageView emptyIv;
+    @BindView(R.id.empty_rl)
+    RelativeLayout emptyRl;
+    @BindView(R.id.error_iv)
+    ImageView errorIv;
+    @BindView(R.id.error_rl)
+    RelativeLayout errorRl;
+    @BindView(R.id.content_ll)
+    LinearLayout contentLl;
 
-    //用户行为历史数据
-    private List<String> mDatas = new ArrayList<>();
-    //高亮名词
-    private List<String> highLightList = new ArrayList<>();
-    //用户画像文字墙
-    String[] texts = {
-            "三亚", "旅游", "导航", "美食", "酒店", "亚龙湾", "经济型", "自由", "海边", "探索", "蜈支洲岛",
-            "广州", "自驾游", "椰子鸡", "海鲜", "西岛", "玳瑁岛", "海景", "地图", "个性", "淡季", "优惠"};
+    private User user;
 
     private UserAdapter adapter;
 
@@ -61,47 +77,56 @@ public class UserActivity extends AppCompatActivity {
 
         titleTv.setText("个人中心");
 
-        initData();
-
-        initRv();
-
-        initTextWall();
-    }
-
-    private void initData(){
-        mDatas.add("2017年9月15日查看了三亚优惠活动");
-        mDatas.add("2017年9月11日分享了《三亚游记》到朋友圈");
-        mDatas.add("2017年9月7日在三亚游览了亚龙湾景点");
-        mDatas.add("2017年9月5日使用了地图导航从广州到三亚");
-        mDatas.add("2017年9月4日预订了海韵度假酒店海景房");
-        mDatas.add("2017年9月1日机器人捕捉到了三亚游玩意向");
-        mDatas.add("2017年8月17日对海南椰子鸡很感兴趣");
-        mDatas.add("2017年8月13日浏览了酒店、美食和地图模块");
-        mDatas.add("2017年8月9日对推荐景点中的三亚特别关心");
-        mDatas.add("2017年8月3日询问了机器人关于海边游玩景点");
-
-        highLightList.add("三亚");
-        highLightList.add("游记");
-        highLightList.add("优惠");
-        highLightList.add("亚龙湾");
-        highLightList.add("广州");
-        highLightList.add("海韵度假酒店");
-        highLightList.add("海南椰子鸡");
-        highLightList.add("酒店");
-        highLightList.add("美食");
-        highLightList.add("地图");
-        highLightList.add("景点");
-        highLightList.add("海边");
+        beginRefreshing();
     }
 
     /**
+     * 初始化数据
+     */
+    private void beginRefreshing() {
+        showLoading();
+        new Handler().postDelayed(() -> {
+            UserDao.queryAll(new UserDao.DbCallBack() {
+                @Override
+                public void onSuccess(List<User> datas) {
+                    if (recyclerView == null) return;
+                    showContent();
+
+                    if (datas == null || datas.size() == 0) {
+                        //空数据
+                        showEmpty();
+                    } else {
+                        user = datas.get(0);
+                        userNameTv.setText(user.getName());
+                        scoreTv.setText(user.getScore());
+                        //文字墙
+                        String[] texts=user.getTag().split(";");
+                        initTextWall(texts);
+                        //行为轨迹
+                        List<String> history = Arrays.asList(user.getHistory().split(";"));
+                        List<String> highlight = Arrays.asList(user.getHighlight().split(";"));
+                        initRv(history,highlight);
+                    }
+                }
+
+                @Override
+                public void onFailed(Exception e) {
+                    if (user == null) {
+                        showError();
+                    }
+                }
+            });
+        }, 1000);
+    }
+    
+    /**
      * 初始化列表
      */
-    private void initRv() {
+    private void initRv(List<String> mDatas,List<String> highLightList) {
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         recyclerView.setHasFixedSize(true);
         if (mDatas != null && mDatas.size() > 0) {
-            adapter = new UserAdapter(mDatas,highLightList);
+            adapter = new UserAdapter(mDatas, highLightList);
             recyclerView.setAdapter(adapter);
         }
     }
@@ -109,7 +134,7 @@ public class UserActivity extends AppCompatActivity {
     /**
      * 初始化文字墙
      */
-    private void initTextWall() {
+    private void initTextWall(String[] texts) {
         userTw.post(() -> {
             List<TextItem> textItems = new ArrayList<>();
             for (int i = 0; i < texts.length; i++) {
@@ -130,6 +155,61 @@ public class UserActivity extends AppCompatActivity {
                 break;
             case R.id.title_tv:
                 break;
+            case R.id.empty_rl:
+                beginRefreshing();
+                break;
+            case R.id.error_rl:
+                beginRefreshing();
+                break;
         }
     }
+
+    /**
+     * 显示加载
+     */
+    private void showLoading() {
+        emptyRl.setVisibility(View.GONE);
+        errorRl.setVisibility(View.GONE);
+        contentLl.setVisibility(View.GONE);
+        loadingRl.setVisibility(View.VISIBLE);
+
+        WaveDrawable mWaveDrawable = new WaveDrawable(this, R.mipmap.pic_loading);
+        mWaveDrawable.setWaveAmplitude(5);//振幅,max=100
+        mWaveDrawable.setWaveLength(100);//波长,max=600
+        mWaveDrawable.setWaveSpeed(5);//速度,max=50
+//        mWaveDrawable.setLevel(4000);//进度,max=10000
+        mWaveDrawable.setIndeterminate(true);//是否自增
+        loadView.setImageDrawable(mWaveDrawable);
+    }
+
+    /**
+     * 显示内容
+     */
+    private void showContent() {
+        emptyRl.setVisibility(View.GONE);
+        errorRl.setVisibility(View.GONE);
+        contentLl.setVisibility(View.VISIBLE);
+        loadingRl.setVisibility(View.GONE);
+    }
+
+    /**
+     * 显示空布局
+     */
+    private void showEmpty() {
+        emptyRl.setVisibility(View.VISIBLE);
+        errorRl.setVisibility(View.GONE);
+        contentLl.setVisibility(View.GONE);
+        loadingRl.setVisibility(View.GONE);
+    }
+
+    /**
+     * 显示错误布局
+     */
+    private void showError() {
+        emptyRl.setVisibility(View.GONE);
+        errorRl.setVisibility(View.VISIBLE);
+        contentLl.setVisibility(View.GONE);
+        loadingRl.setVisibility(View.GONE);
+    }
+
 }

@@ -9,92 +9,107 @@
 
     <include layout="@layout/bar_title"/>
 
-    <!-- 用户信息 -->
-
     <include layout="@layout/divider_h"/>
 
-    <!-- 文字墙 -->
+    <include layout="@layout/view_loading" />
+
+    <include layout="@layout/view_empty" />
+
+    <include layout="@layout/view_error_network" />
+
     <LinearLayout
+        android:id="@+id/content_ll"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="visible">
 
+        <!-- 用户信息 -->
         <LinearLayout
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="20dp"
-            android:layout_weight="1"
-            android:gravity="center_horizontal"
-            android:orientation="vertical">
+            android:orientation="horizontal">
 
-            <ImageView
-                android:id="@+id/userImg_iv"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:src="@mipmap/avatar_myself" />
-
-            <TextView
-                android:id="@+id/userName_tv"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text="格雷夫斯"
-                android:textColor="@color/text_black1" />
+                android:layout_margin="20dp"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/userImg_iv"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:src="@mipmap/avatar_myself" />
+
+                <TextView
+                    android:id="@+id/userName_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="格雷夫斯"
+                    android:textColor="@color/text_black1" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="20dp"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/score_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="60dp"
+                    android:gravity="center_vertical"
+                    android:text="796"
+                    android:textColor="@color/theme_color"
+                    android:textSize="40sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="旅游指数评分"
+                    android:textColor="@color/theme_color" />
+            </LinearLayout>
+
         </LinearLayout>
 
+        <!-- 文字墙 -->
         <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="20dp"
             android:layout_weight="1"
-            android:gravity="center_horizontal"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="60dp"
-                android:gravity="center_vertical"
-                android:text="796"
-                android:textColor="@color/theme_color"
-                android:textSize="40sp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text="旅游指数评分"
-                android:textColor="@color/theme_color" />
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp">
+            <com.giant.watsonapp.views.TextWall
+                android:id="@+id/user_tw"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+            </com.giant.watsonapp.views.TextWall>
         </LinearLayout>
 
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_weight="1"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp">
-        <com.giant.watsonapp.views.TextWall
-            android:id="@+id/user_tw"
+        <!-- 行为列表 -->
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-        </com.giant.watsonapp.views.TextWall>
-    </LinearLayout>
+            android:layout_height="200dp"
+            android:layout_margin="10dp"
+            android:background="@null">
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@null"
+                android:padding="10dp"
+                android:clipToPadding="false"
+                />
+        </LinearLayout>
 
-    <!-- 行为列表 -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:layout_margin="10dp"
-        android:background="@null">
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@null"
-            android:padding="10dp"
-            android:clipToPadding="false"
-            />
     </LinearLayout>
 
 </LinearLayout>

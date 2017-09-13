@@ -317,6 +317,7 @@ public class SceneNavActivity extends AppCompatActivity {
                     playIv.setImageResource(R.mipmap.icon_voice_stop);
                     playAudio(messageTv.getText().toString());
                 }else {
+                    playIv.setImageResource(R.mipmap.icon_voice_play);
                     stopAudio();
                 }
                 break;

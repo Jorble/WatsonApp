@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/popwindow"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="horizontal">
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                android:text="自然风光线"
+                android:textColor="@color/text_black1"
+                android:textSize="@dimen/text_size1"
+                android:textStyle="bold"
+                 />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="5dp"
+                android:text="美人鱼雕塑"
+                android:textColor="@color/text_black3"
+                android:textSize="@dimen/text_size3"
+                 />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="5dp"
+                android:text="巨石广场"
+                android:textColor="@color/text_black3"
+                android:textSize="@dimen/text_size3"
+                 />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="5dp"
+                android:text="情人桥"
+                android:textColor="@color/text_black3"
+                android:textSize="@dimen/text_size3"
+                 />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="5dp"
+                android:text="观海长廊"
+                android:textColor="@color/text_black3"
+                android:textSize="@dimen/text_size3"
+                 />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="5dp"
+                android:text="观湖亭"
+                android:textColor="@color/text_black3"
+                android:textSize="@dimen/text_size3"
+                 />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="5dp"
+                android:text="情人岛"
+                android:textColor="@color/text_black3"
+                android:textSize="@dimen/text_size3"
+                 />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="5dp"
+                android:text="观海台"
+                android:textColor="@color/text_black3"
+                android:textSize="@dimen/text_size3"
+                 />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="5dp"
+                android:text="金龟探海"
+                android:textColor="@color/text_black3"
+                android:textSize="@dimen/text_size3"
+                 />
+        </LinearLayout>
+
+
+        <TextView
+            android:id="@+id/followMe_tv1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/shape_bg_corner"
+            android:gravity="center"
+            android:text="跟我走"
+            android:textColor="@color/theme_color"
+            android:textSize="@dimen/text_size2" />
+    </LinearLayout>
+
+    <include layout="@layout/divider_v" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_margin="5dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                android:text="休闲徒步线"
+                android:textColor="@color/text_black1"
+                android:textSize="@dimen/text_size1"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="5dp"
+                android:text="沙滩儿童乐园"
+                android:textColor="@color/text_black3"
+                android:textSize="@dimen/text_size3"
+                 />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="5dp"
+                android:text="美人鱼雕塑"
+                android:textColor="@color/text_black3"
+                android:textSize="@dimen/text_size3"
+                 />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="5dp"
+                android:text="巨石广场"
+                android:textColor="@color/text_black3"
+                android:textSize="@dimen/text_size3"
+                 />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="5dp"
+                android:text="情人桥"
+                android:textColor="@color/text_black3"
+                android:textSize="@dimen/text_size3"
+                 />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="5dp"
+                android:text="生命井"
+                android:textColor="@color/text_black3"
+                android:textSize="@dimen/text_size3"
+                 />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="5dp"
+                android:text="观海长廊"
+                android:textColor="@color/text_black3"
+                android:textSize="@dimen/text_size3"
+                 />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="5dp"
+                android:text="观湖亭"
+                android:textColor="@color/text_black3"
+                android:textSize="@dimen/text_size3"
+                 />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="5dp"
+                android:text="情人岛"
+                android:textColor="@color/text_black3"
+                android:textSize="@dimen/text_size3"
+                 />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/followMe_tv2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/shape_bg_corner"
+            android:gravity="center"
+            android:text="跟我走"
+            android:textColor="@color/theme_color"
+            android:textSize="@dimen/text_size2" />
+    </LinearLayout>
+
+</LinearLayout>

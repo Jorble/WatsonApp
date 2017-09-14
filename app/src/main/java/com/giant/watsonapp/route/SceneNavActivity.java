@@ -3,6 +3,7 @@ package com.giant.watsonapp.route;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -10,8 +11,12 @@ import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.LinearLayoutManager;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -106,6 +111,7 @@ public class SceneNavActivity extends AppCompatActivity {
 
         mSharedPreferences = getSharedPreferences(TtsSettings.PREFER_NAME, MODE_PRIVATE);
 
+        showRouteChoose();
     }
 
     /**
@@ -264,6 +270,53 @@ public class SceneNavActivity extends AppCompatActivity {
     }
 
     /**
+     * 选择路线
+     */
+    private void showRouteChoose(){
+        // 利用layoutInflater获得View
+        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View view = inflater.inflate(R.layout.pop_scene_nav, null);
+
+        // 下面是两种方法得到宽度和高度 getWindow().getDecorView().getWidth()
+
+        final PopupWindow window = new PopupWindow(view,
+                WindowManager.LayoutParams.MATCH_PARENT,
+                WindowManager.LayoutParams.WRAP_CONTENT);
+
+        // 设置popWindow弹出窗体可点击，这句话必须添加，并且是true
+        window.setFocusable(true);
+
+
+        // 实例化一个ColorDrawable颜色为半透明0xb00000
+        ColorDrawable dw = new ColorDrawable(0xb00000);
+        window.setBackgroundDrawable(dw);
+
+
+        // 设置popWindow的显示和消失动画
+        window.setAnimationStyle(R.style.popwindow_bottom_anim_style);
+        // 在底部显示,第一个参数是parent，不是在其中显示，而是通过子控件找到主窗体，随便一个子控件都行
+        titleTv.post(()->window.showAtLocation(titleTv, Gravity.BOTTOM, 0, 0));
+
+        // 自然风光线
+        TextView followMe1 = (TextView) view.findViewById(R.id.followMe_tv1);
+        followMe1.setOnClickListener((View v) ->{
+            imgIv.setImageResource(R.mipmap.sanya11);
+            nameTv.setText("金龟探海");
+            messageTv.setText("在蜈支洲岛东南的观日岩下，有一天然形成的巨石如一只巨大的海龟，头、甲等都清晰可辨尤值得称道的是，在整块巨石的左前方有一露出海面的条状长型岩石，当海水袭来，犹如海龟用脚在划水，动态逼真，仿佛一只巨大的海龟期望回到自己的故乡，正缓缓爬向大海。");
+            window.dismiss();
+        });
+
+        //休闲徒步线
+        TextView followMe2 = (TextView) view.findViewById(R.id.followMe_tv2);
+        followMe2.setOnClickListener((View v) ->{
+            imgIv.setImageResource(R.mipmap.sanya12);
+            nameTv.setText("观海长廊");
+            messageTv.setText("在蜈支洲岛西侧，沿海边地形修建了木质走廊和平台，可以沿着走廊观看蜈支洲岛清澈的海水，这一带因为礁石比较多，所以可以看到很螃蟹在礁石上“行走”，如果运气好，在平台上还可以看到成群的热带鱼 。");
+            window.dismiss();
+        });
+    }
+
+    /**
      * 停止播放音频
      *
      *
@@ -303,7 +356,8 @@ public class SceneNavActivity extends AppCompatActivity {
         super.onPause();
     }
 
-    @OnClick({R.id.back_iv, R.id.title_tv, R.id.play_iv, R.id.takePic_tv, R.id.generate_tv})
+    @OnClick({R.id.back_iv, R.id.title_tv, R.id.play_iv, R.id.takePic_tv, R.id.generate_tv
+            ,R.id.chooseRoute_ll})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.back_iv:
@@ -325,7 +379,10 @@ public class SceneNavActivity extends AppCompatActivity {
                 ChatActivity.startMyself(context,true);
                 break;
             case R.id.generate_tv:
-                TravelogActivity.startMyself(this,"file:///android_asset/wuzhizhoudao.html");
+                TravelogActivity.startMyself(this,"wzzd");
+                break;
+            case R.id.chooseRoute_ll:
+                showRouteChoose();
                 break;
         }
     }

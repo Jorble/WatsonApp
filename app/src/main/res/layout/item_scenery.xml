@@ -147,7 +147,7 @@
                         android:gravity="center"
                         android:textColor="@color/theme_color"
                         android:textSize="@dimen/text_size2"
-                        android:text="拍照签到"/>
+                        android:text="拍照留念"/>
                     <TextView
                         android:id="@+id/readMap_tv"
                         android:layout_weight="1"

@@ -9,33 +9,46 @@
 
     <include layout="@layout/bar_title"/>
 
+    <include layout="@layout/view_loading" />
+
+    <include layout="@layout/view_empty" />
+
+    <include layout="@layout/view_error_network" />
+
     <LinearLayout
+        android:id="@+id/content_ll"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:layout_margin="10dp"
-        android:background="@drawable/shape_bg_corner">
-        <WebView
-            android:id="@+id/webView"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="visible">
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-        </WebView>
-    </LinearLayout>
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_margin="10dp"
+            android:background="@drawable/shape_bg_corner">
+            <WebView
+                android:id="@+id/webView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+            </WebView>
+        </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/share_bt"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_margin="10dp"
-        android:background="@drawable/shape_bg_corner"
-        android:gravity="center">
+        <LinearLayout
+            android:id="@+id/share_bt"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_margin="10dp"
+            android:background="@drawable/shape_bg_corner"
+            android:gravity="center">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="分享到朋友圈"
-            android:textColor="@color/theme_color"
-            android:textSize="@dimen/text_size1" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="分享到朋友圈"
+                android:textColor="@color/theme_color"
+                android:textSize="@dimen/text_size1" />
+        </LinearLayout>
     </LinearLayout>
 
 </LinearLayout>

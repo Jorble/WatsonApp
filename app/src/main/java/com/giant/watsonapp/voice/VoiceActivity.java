@@ -390,7 +390,7 @@ public class VoiceActivity extends AppCompatActivity {
             case R.id.title_tv:
                 break;
             case R.id.generate_ll:
-                TravelogActivity.startMyself(this,"file:///android_asset/sanya.html");
+                TravelogActivity.startMyself(this,"sy");
                 break;
             case R.id.empty_rl:
                 beginRefreshing();

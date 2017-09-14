@@ -50,7 +50,7 @@
                             android:id="@+id/img_iv"
                             android:layout_width="60dp"
                             android:layout_height="60dp"
-                            android:src="@mipmap/sanya05" />
+                            android:src="@mipmap/sanya12" />
 
                         <android.support.v7.widget.AppCompatTextView
                             android:id="@+id/name_tv"
@@ -99,7 +99,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:gravity="center"
-                            android:text="拍照签到"
+                            android:text="拍照留念"
                             android:textColor="@color/theme_color"
                             android:textSize="@dimen/text_size2" />
 
@@ -117,6 +117,24 @@
                 </LinearLayout>
 
             </android.support.v7.widget.CardView>
+
+            <LinearLayout
+                android:id="@+id/chooseRoute_ll"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:gravity="center"
+                android:background="@drawable/shape_bg_corner">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="选择路线"
+                    android:textColor="@color/theme_color"
+                    android:textSize="@dimen/text_size2" />
+
+            </LinearLayout>
 
         </LinearLayout>
     </ScrollView>

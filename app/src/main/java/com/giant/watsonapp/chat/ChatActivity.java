@@ -178,7 +178,7 @@ public class ChatActivity extends TakePhotoActivity implements EasyPermissions.P
         mWindow = getWindow();
 
         chatView.initModule();
-        chatView.setTitle("旅行助手");
+        chatView.setTitle("旅游助手");
         mData = new ArrayList<>();
         initMsgAdapter();
 

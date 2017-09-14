@@ -366,7 +366,7 @@
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:layout_marginTop="5dp"
-                                        android:text="旅行助手"
+                                        android:text="旅游助手"
                                         android:textSize="@dimen/text_size1"
                                         android:textColor="@color/text_black1"
                                         android:textStyle="bold"
@@ -375,7 +375,7 @@
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:layout_marginTop="5dp"
-                                        android:text="Trip Assist"
+                                        android:text="Travel Helper"
                                         android:textSize="@dimen/text_size3"
                                         android:textColor="@color/text_black1"
                                         android:alpha="0.8"/>
